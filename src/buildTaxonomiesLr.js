@@ -5,12 +5,14 @@ module.exports = (aeDb) => {
     aeDb.view('artendb/baumLr', {
       startkey: [1],
       endkey: [1, '\u9999', '\u9999', '\u9999', '\u9999', '\u9999'],
+      reduce: false,
       'include_docs': true
     }, (error, result) => {
       if (error) reject(`error querying view baumLr: ${error}`)
-      console.log('buildTaxonomiesLr, result from baumLr', result)
-      resolve(true)
-      /*const taxonomies = result.rows.map((doc) => {
+      // console.log('buildTaxonomiesLr, result from baumLr', result)
+      // resolve(true)
+      const taxonomies = result.rows.map((row) => {
+        const doc = row.doc
         return {
           Typ: 'Taxonomie',
           Name: doc.Taxonomie.Eigenschaften.Taxonomie,
@@ -26,8 +28,8 @@ module.exports = (aeDb) => {
           children: []
         }
       })
-      console.log('buildTaxonomiesLr would save', taxonomies)
-      resolve(true)*/
+      // console.log('buildTaxonomiesLr would save', taxonomies)
+      resolve(true)
       /*aeDb.save(taxonomies, (error, result) => {
         if (error) reject(`error saving lr-taxonomies ${error}`)
         resolve(result.rows)
