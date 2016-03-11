@@ -2,13 +2,15 @@
 
 module.exports = (aeDb) => {
   return new Promise((resolve, reject) => {
-    aeDb.view('artendb/baumLr', {
+    aeDb.view('artendb/baumLr'/*, {
       startkey: [1],
-      endkey: [1, '\u9999'],
+      endkey: [1, '\u9999', '\u9999', '\u9999', '\u9999', '\u9999'],
       'include_docs': true
-    }, (error, result) => {
+    }*/, (error, result) => {
       if (error) reject(`error querying view baumLr: ${error}`)
-      const taxonomies = result.rows.map((doc) => {
+      console.log('buildTaxonomiesLr, result from baumLr', result)
+      resolve(true)
+      /*const taxonomies = result.rows.map((doc) => {
         return {
           Typ: 'Taxonomie',
           Name: doc.Taxonomie.Eigenschaften.Taxonomie,
@@ -24,10 +26,12 @@ module.exports = (aeDb) => {
           children: []
         }
       })
-      aeDb.save(taxonomies, (error, result) => {
+      console.log('buildTaxonomiesLr would save', taxonomies)
+      resolve(true)*/
+      /*aeDb.save(taxonomies, (error, result) => {
         if (error) reject(`error saving lr-taxonomies ${error}`)
         resolve(result.rows)
-      })
+      })*/
     })
   })
 }

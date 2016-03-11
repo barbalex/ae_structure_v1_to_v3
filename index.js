@@ -44,131 +44,135 @@
  */
 
 const couchPass = require('./couchPass.json')
-const url = `http://${couchPass.user}:${couchPass.pass}@127.0.0.1:5984`
 const cradle = require('cradle')
-const aeDb = new (cradle.Connection)(url)
-const _ = require('lodash')
-const buildNonLrTaxonomies = require('./src/buildNonLrTaxonomies.js')
-const buildLrTaxonomies = require('./src/buildLrTaxonomies.js')
+const connection = new (cradle.Connection)(`127.0.0.1`, 5984, {
+  auth: {
+    username: couchPass.user,
+    password: couchPass.pass
+  }
+})
+const aeDb = connection.database('artendb')
+// const _ = require('lodash')
+const buildTaxonomiesNonLr = require('./src/buildTaxonomiesNonLr.js')
+const buildTaxonomiesLr = require('./src/buildTaxonomiesLr.js')
+const buildTaxObjectsFauna = require('./src/buildTaxObjectsFauna.js')
 
-buildNonLrTaxonomies(aeDb)
-  .then((result) => buildLrTaxonomies(aeDb))
-  .then((result) => {
-    // more
-  })
+buildTaxonomiesNonLr(aeDb)
+  .then((result) => buildTaxonomiesLr(aeDb))
+  .then((result) => buildTaxObjectsFauna(aeDb))
   .catch((error) => console.log(error))
+  /*
+  const hierarchyFieldsOfGroups = {
+    'Fauna': ['Klasse', 'Ordnung', 'Familie', 'Gattung'], // hat funktioniert
+    'Flora': ['Familie', 'Gattung'], // Gattung fehlt!
+    'Moose': ['Klasse', 'Familie', 'Gattung'], // Gattung fehlt!
+    'Macromycetes': ['Gattung'] // Gattung fehlt!
+  }
 
-const hierarchyFieldsOfGroups = {
-  'Fauna': ['Klasse', 'Ordnung', 'Familie', 'Gattung'], // hat funktioniert
-  'Flora': ['Familie', 'Gattung'], // Gattung fehlt!
-  'Moose': ['Klasse', 'Familie', 'Gattung'], // Gattung fehlt!
-  'Macromycetes': ['Gattung'] // Gattung fehlt!
-}
+  let docsWritten = 0
 
-let docsWritten = 0
+  function bulkSave (docs) {
+    aeDb.save(docs, (error, result) => {
+      if (error) return console.log('error after bulk:', error)
+      docsWritten = docsWritten + docs.length
+      console.log('docsWritten', docsWritten)
+    })
+  }
 
-function bulkSave (docs) {
-  aeDb.save(docs, (error, result) => {
-    if (error) return console.log('error after bulk:', error)
-    docsWritten = docsWritten + docs.length
-    console.log('docsWritten', docsWritten)
-  })
-}
+  aeDb.view('artendb/objekte', {
+    'include_docs': true
+  }, (error, res) => {
+    if (error) return console.log(error)
 
-aeDb.view('artendb/objekte', {
-  'include_docs': true
-}, (error, res) => {
-  if (error) return console.log(error)
+    let docs = []
+    let docsPrepared = 0
 
-  let docs = []
-  let docsPrepared = 0
+    // loop through docs
+    res.rows.forEach((row, index) => {
+      const doc = row.doc
 
-  // loop through docs
-  res.rows.forEach((row, index) => {
-    const doc = row.doc
+      // add org to all objects...
+      if (doc.Gruppe) doc['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
 
-    // add org to all objects...
-    if (doc.Gruppe) doc['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
+      // ...to all property collections...
+      if (doc.Eigenschaftensammlungen) {
+        doc.Eigenschaftensammlungen.forEach((es, index) => {
+          doc.Eigenschaftensammlungen[index]['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
+        })
+      }
+      // ...and to all relation collections
+      if (doc.Beziehungssammlungen) {
+        doc.Beziehungssammlungen.forEach((es, index) => {
+          doc.Beziehungssammlungen[index]['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
+        })
+      }
 
-    // ...to all property collections...
-    if (doc.Eigenschaftensammlungen) {
-      doc.Eigenschaftensammlungen.forEach((es, index) => {
-        doc.Eigenschaftensammlungen[index]['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
-      })
-    }
-    // ...and to all relation collections
-    if (doc.Beziehungssammlungen) {
-      doc.Beziehungssammlungen.forEach((es, index) => {
-        doc.Beziehungssammlungen[index]['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
-      })
-    }
-
-    // build taxonomien
-    if (doc.Gruppe && doc.Taxonomie && doc.Taxonomie.Eigenschaften) {
-      let neueTax = _.cloneDeep(doc.Taxonomie)
-      if (doc.Gruppe === 'Lebensräume' && neueTax.Eigenschaften.Parent) {
-        // lr: remove parent. Only keep Hierarchie
-        if (!neueTax.Eigenschaften.Parent) {
-          console.log(`lr ${doc._id} hat keinen Parent`)
-        } else if (!neueTax.Eigenschaften.Hierarchie) {
-          console.log(`lr ${doc._id} hat keine Hierarchie`)
+      // build taxonomien
+      if (doc.Gruppe && doc.Taxonomie && doc.Taxonomie.Eigenschaften) {
+        let neueTax = _.cloneDeep(doc.Taxonomie)
+        if (doc.Gruppe === 'Lebensräume' && neueTax.Eigenschaften.Parent) {
+          // lr: remove parent. Only keep Hierarchie
+          if (!neueTax.Eigenschaften.Parent) {
+            console.log(`lr ${doc._id} hat keinen Parent`)
+          } else if (!neueTax.Eigenschaften.Hierarchie) {
+            console.log(`lr ${doc._id} hat keine Hierarchie`)
+          } else {
+            delete neueTax.Eigenschaften.Parent
+          }
         } else {
-          delete neueTax.Eigenschaften.Parent
+          // this is a species
+          // need to build Hierarchie
+          let hierarchy = []
+          const hierarchyFields = hierarchyFieldsOfGroups[doc.Gruppe]
+          if (hierarchyFields) {
+            hierarchyFields.forEach((field, index) => {
+              if (neueTax.Eigenschaften[field]) {
+                hierarchy.push({
+                  Name: neueTax.Eigenschaften[field]
+                })
+              } else {
+                hierarchy.push({
+                  Name: `(unbekannte ${field} + )`
+                })
+              }
+            })
+            hierarchy.push({
+              'Name': neueTax.Eigenschaften['Artname vollständig'],
+              'GUID': doc._id
+            })
+            neueTax.Eigenschaften.Hierarchie = hierarchy
+          } else {
+            console.log(`doc ${doc._id} has no hierarchyFields`)
+          }
+        }
+        // set this taxonomy as standard
+        neueTax.Standardtaxonomie = true
+        // add org mit schreibrecht
+        neueTax['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
+
+        // now manipulate order of properties
+        // first clone es and bs
+        const newEs = _.cloneDeep(doc.Eigenschaftensammlungen)
+        const newBs = _.cloneDeep(doc.Beziehungssammlungen)
+        // remove old versions
+        delete doc.Taxonomie
+        if (doc.Eigenschaftensammlungen) delete doc.Eigenschaftensammlungen
+        if (doc.Beziehungssammlungen) delete doc.Beziehungssammlungen
+        // now add in wanted order
+        doc.Taxonomien = [neueTax]
+        doc.Eigenschaftensammlungen = newEs
+        doc.Beziehungssammlungen = newBs
+
+        docs.push(doc)
+
+        if ((docs.length > 600) || (index === res.rows.length - 1)) {
+          docsPrepared = docsPrepared + docs.length
+          console.log('docsPrepared', docsPrepared)
+          // save 600 docs
+          bulkSave(docs.splice(0, 600))
         }
       } else {
-        // this is a species
-        // need to build Hierarchie
-        let hierarchy = []
-        const hierarchyFields = hierarchyFieldsOfGroups[doc.Gruppe]
-        if (hierarchyFields) {
-          hierarchyFields.forEach((field, index) => {
-            if (neueTax.Eigenschaften[field]) {
-              hierarchy.push({
-                Name: neueTax.Eigenschaften[field]
-              })
-            } else {
-              hierarchy.push({
-                Name: `(unbekannte ${field} + )`
-              })
-            }
-          })
-          hierarchy.push({
-            'Name': neueTax.Eigenschaften['Artname vollständig'],
-            'GUID': doc._id
-          })
-          neueTax.Eigenschaften.Hierarchie = hierarchy
-        } else {
-          console.log(`doc ${doc._id} has no hierarchyFields`)
-        }
+        console.log(`doc ${doc._id} has no Gruppe or no Taxonomie`)
       }
-      // set this taxonomy as standard
-      neueTax.Standardtaxonomie = true
-      // add org mit schreibrecht
-      neueTax['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
-
-      // now manipulate order of properties
-      // first clone es and bs
-      const newEs = _.cloneDeep(doc.Eigenschaftensammlungen)
-      const newBs = _.cloneDeep(doc.Beziehungssammlungen)
-      // remove old versions
-      delete doc.Taxonomie
-      if (doc.Eigenschaftensammlungen) delete doc.Eigenschaftensammlungen
-      if (doc.Beziehungssammlungen) delete doc.Beziehungssammlungen
-      // now add in wanted order
-      doc.Taxonomien = [neueTax]
-      doc.Eigenschaftensammlungen = newEs
-      doc.Beziehungssammlungen = newBs
-
-      docs.push(doc)
-
-      if ((docs.length > 600) || (index === res.rows.length - 1)) {
-        docsPrepared = docsPrepared + docs.length
-        console.log('docsPrepared', docsPrepared)
-        // save 600 docs
-        bulkSave(docs.splice(0, 600))
-      }
-    } else {
-      console.log(`doc ${doc._id} has no Gruppe or no Taxonomie`)
-    }
-  })
-})
+    })
+  })*/
