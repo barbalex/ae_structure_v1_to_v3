@@ -48,6 +48,15 @@ const url = `http://${couchPass.user}:${couchPass.pass}@127.0.0.1:5984`
 const cradle = require('cradle')
 const aeDb = new (cradle.Connection)(url)
 const _ = require('lodash')
+const buildNonLrTaxonomies = require('./src/buildNonLrTaxonomies.js')
+const buildLrTaxonomies = require('./src/buildLrTaxonomies.js')
+
+buildNonLrTaxonomies(aeDb)
+  .then((result) => buildLrTaxonomies(aeDb))
+  .then((result) => {
+    // more
+  })
+  .catch((error) => console.log(error))
 
 const hierarchyFieldsOfGroups = {
   'Fauna': ['Klasse', 'Ordnung', 'Familie', 'Gattung'], // hat funktioniert
@@ -66,7 +75,7 @@ function bulkSave (docs) {
   })
 }
 
-aeDb.view('objects/objects', {
+aeDb.view('artendb/objekte', {
   'include_docs': true
 }, (error, res) => {
   if (error) return console.log(error)

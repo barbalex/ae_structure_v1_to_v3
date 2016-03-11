@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cradle": "^0.7.1"
+    "cradle": "0.7.1"
   }
 }
