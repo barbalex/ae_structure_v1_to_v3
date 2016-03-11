@@ -45,8 +45,8 @@
 
 const couchPass = require('./couchPass.json')
 const url = `http://${couchPass.user}:${couchPass.pass}@127.0.0.1:5984`
-const nano = require('nano')(url)
-const aeDb = nano.db.use('artendb')
+const cradle = require('cradle')
+const aeDb = new (cradle.Connection)(url)
 const _ = require('lodash')
 
 const hierarchyFieldsOfGroups = {
@@ -59,25 +59,23 @@ const hierarchyFieldsOfGroups = {
 let docsWritten = 0
 
 function bulkSave (docs) {
-  let bulk = {}
-  bulk.docs = docs
-  aeDb.bulk(bulk, function (error, result) {
+  aeDb.save(docs, (error, result) => {
     if (error) return console.log('error after bulk:', error)
     docsWritten = docsWritten + docs.length
     console.log('docsWritten', docsWritten)
   })
 }
 
-aeDb.view('objects', 'objects', {
+aeDb.view('objects/objects', {
   'include_docs': true
-}, (error, body) => {
+}, (error, res) => {
   if (error) return console.log(error)
 
   let docs = []
   let docsPrepared = 0
 
   // loop through docs
-  body.rows.forEach((row, index) => {
+  res.rows.forEach((row, index) => {
     const doc = row.doc
 
     // add org to all objects...
@@ -102,9 +100,9 @@ aeDb.view('objects', 'objects', {
       if (doc.Gruppe === 'Lebensräume' && neueTax.Eigenschaften.Parent) {
         // lr: remove parent. Only keep Hierarchie
         if (!neueTax.Eigenschaften.Parent) {
-          console.log('lr ' + doc._id + ' hat keinen Parent')
+          console.log(`lr ${doc._id} hat keinen Parent`)
         } else if (!neueTax.Eigenschaften.Hierarchie) {
-          console.log('lr ' + doc._id + ' hat keine Hierarchie')
+          console.log(`lr ${doc._id} hat keine Hierarchie`)
         } else {
           delete neueTax.Eigenschaften.Parent
         }
@@ -117,11 +115,11 @@ aeDb.view('objects', 'objects', {
           hierarchyFields.forEach((field, index) => {
             if (neueTax.Eigenschaften[field]) {
               hierarchy.push({
-                'Name': neueTax.Eigenschaften[field]
+                Name: neueTax.Eigenschaften[field]
               })
             } else {
               hierarchy.push({
-                'Name': '(unbekannte ' + field + ')'
+                Name: `(unbekannte ${field} + )`
               })
             }
           })
@@ -131,7 +129,7 @@ aeDb.view('objects', 'objects', {
           })
           neueTax.Eigenschaften.Hierarchie = hierarchy
         } else {
-          console.log('doc ' + doc._id + ' has no hierarchyFields')
+          console.log(`doc ${doc._id} has no hierarchyFields`)
         }
       }
       // set this taxonomy as standard
@@ -154,14 +152,14 @@ aeDb.view('objects', 'objects', {
 
       docs.push(doc)
 
-      if ((docs.length > 600) || (index === body.rows.length - 1)) {
+      if ((docs.length > 600) || (index === res.rows.length - 1)) {
         docsPrepared = docsPrepared + docs.length
         console.log('docsPrepared', docsPrepared)
         // save 600 docs
         bulkSave(docs.splice(0, 600))
       }
     } else {
-      console.log('doc ' + doc._id + ' has no Gruppe or no Taxonomie')
+      console.log(`doc ${doc._id} has no Gruppe or no Taxonomie`)
     }
   })
 })
