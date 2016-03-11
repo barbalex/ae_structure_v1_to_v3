@@ -2,11 +2,11 @@
 
 module.exports = (aeDb) => {
   return new Promise((resolve, reject) => {
-    aeDb.view('artendb/baumLr'/*, {
+    aeDb.view('artendb/baumLr', {
       startkey: [1],
       endkey: [1, '\u9999', '\u9999', '\u9999', '\u9999', '\u9999'],
       'include_docs': true
-    }*/, (error, result) => {
+    }, (error, result) => {
       if (error) reject(`error querying view baumLr: ${error}`)
       console.log('buildTaxonomiesLr, result from baumLr', result)
       resolve(true)

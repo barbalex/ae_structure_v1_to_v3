@@ -8,7 +8,10 @@ module.exports = (aeDb) => {
       group_level: 1
     }, (error, result) => {
       if (error) reject(`error querying view baumFauna: ${error}`)
-      const names = _.concat(result.map((row) => row.key))
+      const names = result.map((row) => {
+        console.log('row', row)
+        row.key[0]
+      })
       console.log('buildTaxObjectsFauna got this from baumFauna, group_level 1', result)
       console.log('buildTaxObjectsFauna got names baumFauna', names)
       resolve(true)
