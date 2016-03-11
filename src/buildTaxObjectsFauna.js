@@ -1,12 +1,16 @@
 'use strict'
 
+const _ = require('lodash')
+
 module.exports = (aeDb) => {
   return new Promise((resolve, reject) => {
     aeDb.view('artendb/baumFauna', {
       group_level: 1
     }, (error, result) => {
       if (error) reject(`error querying view baumFauna: ${error}`)
+      const names = _.concat(result.map((row) => row.key))
       console.log('buildTaxObjectsFauna got this from baumFauna, group_level 1', result)
+      console.log('buildTaxObjectsFauna got names baumFauna', names)
       resolve(true)
       /*const taxonomies = result.rows.map((doc) => {
         return {
