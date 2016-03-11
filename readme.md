@@ -4,32 +4,16 @@ Diese Anwendung nimmt die Dokumente von arteigenschaften.ch (Version 1) und baut
 
 ### Neu ist:
 
-- es gibt ein Objekt vom Typ "Gruppen"
-- es gibt Objekte vom Typ "Taxonomie"
-- - es gibt Objekte vom Typ "Taxonomie-Objekt"
-- Taxonomien sind wie Eigenschaftensammlungen und Beziehungssammlungen ein Array
+- Es gibt Objekte vom Typ "Taxonomie"
+- Es gibt Objekte vom Typ "Taxonomie-Objekt"
+- In Objekten sind Taxonomien wie Eigenschaftensammlungen und Beziehungssammlungen ein Array
 - Jede Taxonomie beschreibt in den Eigenschaften die hierarchische Position ihres Objekts
-
-### Struktur des Objekts des Typs "Gruppen"
-    
-    _id
-    _rev
-    Typ: Gruppen
-	Flora
-	  [IDs der Objekte des Typs "Taxonomie", die Flora beshreiben]
-	Fauna
-	  [IDs der Objekte des Typs "Taxonomie", die Fauna beshreiben]
-	Moose
-	  [IDs der Objekte des Typs "Taxonomie", die Moose beshreiben]
-	Pilze
-	  [IDs der Objekte des Typs "Taxonomie", die Pilze beshreiben]
-	Lebensräume
-	  [IDs der Objekte des Typs "Taxonomie", die Lebensräume beshreiben]
 
 ### Struktur von Objekten des Typs "Taxonomie"
 
-	_id: "tax_" & uid(5)
+	_id
 	_rev
+	Gruppe
 	Typ: Taxonomie
 	Name
 	Beschreibung
@@ -41,7 +25,7 @@ Diese Anwendung nimmt die Dokumente von arteigenschaften.ch (Version 1) und baut
 
 ### Struktur von Objekten des Typs "Taxonomie-Objekt"
 	
-	_id: tax.-ID & "_taxobj_" & uid(5)
+	_id
 	_rev
 	Typ: Taxonomie-Objekt
 	Name
@@ -58,7 +42,8 @@ Diese Anwendung nimmt die Dokumente von arteigenschaften.ch (Version 1) und baut
     Gruppe
     Typ: Objekt
     Taxonomien
-      [IDs der Objekte des Typs "Taxonomie-Objekt", welche dieses Objekt beschreiben]
+      IDs der Objekte des Typs "Taxonomie-Objekt",
+      welche dieses Objekt in der jeweiligen Taxonomie beschreiben
     Eigenschaftensammlungen
     Beziehungssammlungen
 
