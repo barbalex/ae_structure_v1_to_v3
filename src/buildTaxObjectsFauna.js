@@ -4,29 +4,21 @@ const _ = require('lodash')
 
 module.exports = (aeDb) => {
   return new Promise((resolve, reject) => {
+    const levels = [1, 2, 3, 5]
     aeDb.view('artendb/baumFauna', {
       group_level: 1
     }, (error, result) => {
       if (error) reject(`error querying view baumFauna: ${error}`)
       const names = _.map(result, (row) => row.key[0])
-      console.log('names', names)
+      console.log('buildTaxObjectsFauna, baumFauna, names of level ' + level, names)
       resolve(true)
-      /*const taxonomies = result.rows.map((doc) => {
+      const taxonomyObjects = result.map((name) => {
         return {
           Typ: 'Taxonomie-Objekt',
-          Name: doc.Taxonomie.Eigenschaften.Taxonomie,
-          Label: doc.Taxonomie.Eigenschaften['Einheit-Abkürzung'],
-          Beschreibung: doc.Taxonomie.Eigenschaften.Beschreibung,
-          Bemerkungen: doc.Taxonomie.Eigenschaften.Bemerkungen,
-          Datenstand: null,
-          'Einheit-Nrn FNS von': doc.Taxonomie.Eigenschaften['Einheit-Nrn FNS von'],
-          'Einheit-Nrn FNS bis': doc.Taxonomie.Eigenschaften['Einheit-Nrn FNS bis'],
-          Gruppe: 'Lebensräume',
-          Standardtaxonomie: false,
-          'Organisation mit Schreibrecht': 'FNS Kt. ZH',
+          Name: name,
           children: []
         }
-      })
+      })/*
       aeDb.save(taxonomies, (error, result) => {
         if (error) reject(`error saving lr-taxonomies ${error}`)
         resolve(result.rows)
