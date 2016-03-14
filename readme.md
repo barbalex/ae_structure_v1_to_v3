@@ -21,19 +21,19 @@ Diese Anwendung nimmt die Dokumente von arteigenschaften.ch (Version 1) und baut
 	Link
 	Standardtaxonomie
 	Organisation mit Schreibrecht
-	children
 
 ### Struktur von Objekten des Typs "Taxonomie-Objekt"
 	
 	_id
 	_rev
 	Typ: Taxonomie-Objekt
+	Taxonomie: _id der Taxonomie
 	Name
-	children
 	Objekt
 	  guid
 	  Eigenschaften
 		… (abhängig von der Taxonomie)
+	parent (null für oberste Ebene)
 
 ### neue Struktur von Objekten des Typs "Objekt":
 
@@ -44,6 +44,7 @@ Diese Anwendung nimmt die Dokumente von arteigenschaften.ch (Version 1) und baut
     Taxonomien
       IDs der Objekte des Typs "Taxonomie-Objekt",
       welche dieses Objekt in der jeweiligen Taxonomie beschreiben
+	  braucht es das????
     Eigenschaftensammlungen
     Beziehungssammlungen
 
