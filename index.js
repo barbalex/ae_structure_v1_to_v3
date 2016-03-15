@@ -45,14 +45,11 @@ const aeDb = connection.database('artendb')
 const getObjects = require('./src/getObjects.js')
 const buildTaxonomiesNonLr = require('./src/buildTaxonomiesNonLr.js')
 const buildTaxonomiesLr = require('./src/buildTaxonomiesLr.js')
-const buildTaxObjectsFaunaLevel1 = require('./src/buildTaxObjectsFaunaLevel1.js')
-const buildTaxObjectsFaunaLevel2 = require('./src/buildTaxObjectsFaunaLevel2.js')
-const buildTaxObjectsFaunaLevel3 = require('./src/buildTaxObjectsFaunaLevel3.js')
-const buildTaxObjectsFaunaLevel4 = require('./src/buildTaxObjectsFaunaLevel4.js')
+const buildTaxObjectsFauna = require('./src/buildTaxObjectsFauna.js')
 
 let objects = null
-let nonLrTaxonomies = null
 let taxonomies = null
+let lrTaxonomies = null
 let taxFauna = null
 let taxObjectsFaunaLevel1 = null
 let taxObjectsFaunaLevel2 = null
@@ -62,39 +59,25 @@ let taxObjectsFaunaLevel4 = null
 getObjects(aeDb)
   .then((result) => {
     objects = result
-    console.log('objects', objects.slice(0, 3))
+    console.log('objects', objects.slice(0, 2))
     return buildTaxonomiesNonLr(aeDb)
   })
   .then((result) => {
-    nonLrTaxonomies = result
-    console.log('nonLrTaxonomies', nonLrTaxonomies.slice(0, 3))
+    taxonomies = result
+    console.log('taxonomies', taxonomies.slice(0, 2))
     return buildTaxonomiesLr(aeDb)
   })
   .then((result) => {
-    taxonomies = result
-    console.log('taxonomies', taxonomies.slice(0, 3))
+    lrTaxonomies = result
+    console.log('lrTaxonomies', lrTaxonomies.slice(0, 2))
     // get id of CSCF (2009)
-    taxFauna = nonLrTaxonomies.find((taxonomy) => taxonomy.Name === 'CSCF (2009)')
-    return buildTaxObjectsFaunaLevel1(aeDb, taxFauna)
+    taxFauna = taxonomies.find((taxonomy) => taxonomy.Name === 'CSCF (2009)')
+    return buildTaxObjectsFauna(aeDb, taxFauna, objects)
   })
   .then((result) => {
-    taxObjectsFaunaLevel1 = result
-    console.log('taxObjectsFaunaLevel1', taxObjectsFaunaLevel1.slice(0, 3))
-    return buildTaxObjectsFaunaLevel2(aeDb, taxFauna, taxObjectsFaunaLevel1)
-  })
-  .then((result) => {
-    taxObjectsFaunaLevel2 = result
-    console.log('taxObjectsFaunaLevel2', taxObjectsFaunaLevel2.slice(0, 3))
-    return buildTaxObjectsFaunaLevel3(aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2)
-  })
-  .then((result) => {
-    taxObjectsFaunaLevel3 = result
-    console.log('taxObjectsFaunaLevel3', taxObjectsFaunaLevel3.slice(0, 3))
-    return buildTaxObjectsFaunaLevel4(aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2, taxObjectsFaunaLevel3, objects)
-  })
-  .then((result) => {
-    taxObjectsFaunaLevel4 = result
-    console.log('taxObjectsFaunaLevel4', taxObjectsFaunaLevel4.slice(0, 3))
-    console.log('finished building fauna objects')
+    taxObjectsFaunaLevel1 = result[0]
+    taxObjectsFaunaLevel2 = result[1]
+    taxObjectsFaunaLevel3 = result[2]
+    taxObjectsFaunaLevel4 = result[3]
   })
   .catch((error) => console.log(error))

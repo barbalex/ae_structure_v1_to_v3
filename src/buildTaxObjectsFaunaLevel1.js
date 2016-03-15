@@ -22,8 +22,7 @@ module.exports = function (aeDb, taxFauna) {
         if (error) reject(`error saving lr-taxonomies ${error}`)
         // update taxObjectsFaunaLevel1
         results.forEach((res, i) => {
-          let taxObj = taxObjectsFaunaLevel1[i]
-          taxObj._rev = res.rev
+          taxObjectsFaunaLevel1[i]._rev = res.rev
         })
         resolve(taxObjectsFaunaLevel1)
       })

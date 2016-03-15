@@ -13,8 +13,7 @@ module.exports = function (aeDb) {
       if (error) reject(`error saving nonLrTaxonomies: ${error}`)
       // update nonLrTaxonomies
       results.forEach((res, i) => {
-        let nonLrTaxonomy = nonLrTaxonomies[i]
-        nonLrTaxonomy._rev = res.rev
+        nonLrTaxonomies[i]._rev = res.rev
       })
       resolve(nonLrTaxonomies)
     })

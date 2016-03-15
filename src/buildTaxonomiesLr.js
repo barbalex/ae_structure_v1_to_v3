@@ -34,8 +34,7 @@ module.exports = function (aeDb) {
         if (error) reject(`error saving lr-taxonomies ${error}`)
         // update taxonomies
         results.forEach((res, i) => {
-          let taxonomy = taxonomies[i]
-          taxonomy._rev = res.rev
+          taxonomies[i]._rev = res.rev
         })
         resolve(taxonomies)
       })
