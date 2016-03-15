@@ -1,6 +1,7 @@
 'use strict'
 
 const _ = require('lodash')
+const uuid = require('node-uuid')
 
 module.exports = function (aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2) {
   return new Promise((resolve, reject) => {
@@ -22,6 +23,7 @@ module.exports = function (aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaun
         const name = key[2]
         const parent = ordnungObject._id
         return {
+          _id: uuid.v4(),
           Typ: 'Taxonomie-Objekt',
           Taxonomie: taxonomie,
           Name: name,

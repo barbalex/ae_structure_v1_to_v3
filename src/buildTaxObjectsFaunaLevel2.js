@@ -1,6 +1,7 @@
 'use strict'
 
 const _ = require('lodash')
+const uuid = require('node-uuid')
 
 module.exports = function (aeDb, taxFauna, taxObjectsFaunaLevel1) {
   return new Promise((resolve, reject) => {
@@ -13,13 +14,10 @@ module.exports = function (aeDb, taxFauna, taxObjectsFaunaLevel1) {
         const taxonomie = taxFauna._id
         const klasseName = key[0]
         const klasseObject = taxObjectsFaunaLevel1.find((taxObj) => taxObj.Name === klasseName)
-        console.log('buildTaxObjectsFaunaLevel2, taxObjectsFaunaLevel1', taxObjectsFaunaLevel1.slice(0, 3))
-        console.log('buildTaxObjectsFaunaLevel2, key', key)
-        console.log('buildTaxObjectsFaunaLevel2, klasseName', klasseName)
-        console.log('buildTaxObjectsFaunaLevel2, klasseObject', klasseObject)
         const name = key[1]
         const parent = klasseObject._id
         return {
+          _id: uuid.v4(),
           Typ: 'Taxonomie-Objekt',
           Taxonomie: taxonomie,
           Name: name,

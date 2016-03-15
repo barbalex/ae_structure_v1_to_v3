@@ -1,6 +1,7 @@
 'use strict'
 
 const _ = require('lodash')
+const uuid = require('node-uuid')
 
 module.exports = function (aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2, taxObjectsFaunaLevel3, objects) {
   return new Promise((resolve, reject) => {
@@ -27,6 +28,7 @@ module.exports = function (aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaun
         const object = objects.find((obj) => obj._id === objId)
         const eigenschaften = object.Taxonomie.Eigenschaften
         return {
+          _id: uuid.v4(),
           Typ: 'Taxonomie-Objekt',
           Taxonomie: taxonomie,
           Name: name,

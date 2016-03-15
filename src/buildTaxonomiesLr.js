@@ -1,5 +1,7 @@
 'use strict'
 
+const uuid = require('node-uuid')
+
 module.exports = function (aeDb) {
   return new Promise((resolve, reject) => {
     aeDb.view('artendb/baumLr', {
@@ -14,6 +16,7 @@ module.exports = function (aeDb) {
       let taxonomies = result.rows.map((row) => {
         const doc = row.doc
         return {
+          _id: uuid.v4(),
           Typ: 'Taxonomie',
           Name: doc.Taxonomie.Eigenschaften.Taxonomie,
           Label: doc.Taxonomie.Eigenschaften['Einheit-Abkürzung'],
@@ -27,8 +30,6 @@ module.exports = function (aeDb) {
           'Organisation mit Schreibrecht': 'FNS Kt. ZH'
         }
       })
-      // console.log('buildTaxonomiesLr would save', taxonomies)
-      // resolve(true)
       aeDb.save(taxonomies, (error, results) => {
         if (error) reject(`error saving lr-taxonomies ${error}`)
         // update taxonomies
