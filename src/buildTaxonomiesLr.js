@@ -24,8 +24,7 @@ module.exports = (aeDb) => {
           'Einheit-Nrn FNS bis': doc.Taxonomie.Eigenschaften['Einheit-Nrn FNS bis'],
           Gruppe: 'Lebensräume',
           Standardtaxonomie: false,
-          'Organisation mit Schreibrecht': 'FNS Kt. ZH',
-          children: []
+          'Organisation mit Schreibrecht': 'FNS Kt. ZH'
         }
       })
       // console.log('buildTaxonomiesLr would save', taxonomies)

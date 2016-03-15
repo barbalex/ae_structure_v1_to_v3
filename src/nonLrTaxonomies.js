@@ -9,8 +9,7 @@ module.exports = [
     Link: 'http://www.cscf.ch',
     Gruppe: 'Fauna',
     Standardtaxonomie: true,
-    'Organisation mit Schreibrecht': 'FNS Kt. ZH',
-    children: []
+    'Organisation mit Schreibrecht': 'FNS Kt. ZH'
   },
   {
     Typ: 'Taxonomie',
@@ -20,8 +19,7 @@ module.exports = [
     Link: 'http://www.crsf.ch/documents/download/x/ISFS2_20051115.pdf',
     Gruppe: 'Flora',
     Standardtaxonomie: true,
-    'Organisation mit Schreibrecht': 'FNS Kt. ZH',
-    children: []
+    'Organisation mit Schreibrecht': 'FNS Kt. ZH'
   },
   {
     Typ: 'Taxonomie',
@@ -31,8 +29,7 @@ module.exports = [
     Link: 'http://www.wsl.ch/dienstleistungen/inventare/pilze_flechten/swissfungi/index_DE',
     Gruppe: 'Pilze',
     Standardtaxonomie: true,
-    'Organisation mit Schreibrecht': 'FNS Kt. ZH',
-    children: []
+    'Organisation mit Schreibrecht': 'FNS Kt. ZH'
   },
   {
     Typ: 'Taxonomie',
@@ -42,7 +39,6 @@ module.exports = [
     Link: 'http://www.nism.uzh.ch',
     Gruppe: 'Moose',
     Standardtaxonomie: true,
-    'Organisation mit Schreibrecht': 'FNS Kt. ZH',
-    children: []
+    'Organisation mit Schreibrecht': 'FNS Kt. ZH'
   }
 ]
