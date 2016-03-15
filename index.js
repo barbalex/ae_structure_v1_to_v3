@@ -57,9 +57,20 @@ const buildTaxonomiesNonLr = require('./src/buildTaxonomiesNonLr.js')
 const buildTaxonomiesLr = require('./src/buildTaxonomiesLr.js')
 const buildTaxObjectsFauna = require('./src/buildTaxObjectsFauna.js')
 
+let nonLrTaxonomies = null
+let taxonomies = null
+
 buildTaxonomiesNonLr(aeDb)
-  .then((result) => buildTaxonomiesLr(aeDb))
-  .then((result) => buildTaxObjectsFauna(aeDb))
+  .then((result) => {
+    nonLrTaxonomies = result
+    console.log('nonLrTaxonomies', nonLrTaxonomies)
+    return buildTaxonomiesLr(aeDb)
+  })
+  .then((result) => {
+    taxonomies = result
+    console.log('taxonomies', taxonomies)
+    return buildTaxObjectsFauna(aeDb)
+  })
   .catch((error) => console.log(error))
   /*
   const hierarchyFieldsOfGroups = {

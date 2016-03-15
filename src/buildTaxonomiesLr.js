@@ -11,7 +11,7 @@ module.exports = (aeDb) => {
       if (error) reject(`error querying view baumLr: ${error}`)
       // console.log('buildTaxonomiesLr, result from baumLr', result)
       // resolve(true)
-      const taxonomies = result.rows.map((row) => {
+      let taxonomies = result.rows.map((row) => {
         const doc = row.doc
         return {
           Typ: 'Taxonomie',
@@ -28,11 +28,17 @@ module.exports = (aeDb) => {
         }
       })
       // console.log('buildTaxonomiesLr would save', taxonomies)
-      resolve(true)
-      /*aeDb.save(taxonomies, (error, result) => {
+      // resolve(true)
+      aeDb.save(taxonomies, (error, results) => {
         if (error) reject(`error saving lr-taxonomies ${error}`)
-        resolve(result.rows)
-      })*/
+        // update taxonomies
+        results.forEach((res, i) => {
+          let taxonomy = taxonomies[i]
+          taxonomy._id = res.id
+          taxonomy._rev = res.rev
+        })
+        resolve(taxonomies)
+      })
     })
   })
 }
