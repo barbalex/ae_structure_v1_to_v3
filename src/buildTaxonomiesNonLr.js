@@ -4,8 +4,6 @@ let nonLrTaxonomies = require('./nonLrTaxonomies.js')
 
 module.exports = function (aeDb) {
   return new Promise((resolve, reject) => {
-    // console.log('buildTaxonomiesNonLr would save', nonLrTaxonomies)
-    resolve(true)
     aeDb.save(nonLrTaxonomies, (error, results) => {
       if (error) reject(`error saving nonLrTaxonomies: ${error}`)
       // update nonLrTaxonomies

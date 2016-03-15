@@ -62,38 +62,39 @@ let taxObjectsFaunaLevel4 = null
 getObjects(aeDb)
   .then((result) => {
     objects = result
-    console.log('objects', objects.slice(0, 5))
+    console.log('objects', objects.slice(0, 3))
     return buildTaxonomiesNonLr(aeDb)
   })
   .then((result) => {
     nonLrTaxonomies = result
-    console.log('nonLrTaxonomies', nonLrTaxonomies.slice(0, 5))
+    console.log('nonLrTaxonomies', nonLrTaxonomies.slice(0, 3))
     return buildTaxonomiesLr(aeDb)
   })
   .then((result) => {
     taxonomies = result
-    console.log('taxonomies', taxonomies.slice(0, 5))
+    console.log('taxonomies', taxonomies.slice(0, 3))
     // get id of CSCF (2009)
-    taxFauna = taxonomies.find((taxonomy) => taxonomy.Name === 'CSCF (2009)')
-    return buildTaxObjectsFaunaLevel1({ aeDb, taxFauna })
+    taxFauna = nonLrTaxonomies.find((taxonomy) => taxonomy.Name === 'CSCF (2009)')
+    return buildTaxObjectsFaunaLevel1(aeDb, taxFauna)
   })
   .then((result) => {
     taxObjectsFaunaLevel1 = result
-    console.log('taxObjectsFaunaLevel1', taxObjectsFaunaLevel1.slice(0, 5))
-    return buildTaxObjectsFaunaLevel2({ aeDb, taxFauna, taxObjectsFaunaLevel1 })
+    console.log('taxObjectsFaunaLevel1', taxObjectsFaunaLevel1.slice(0, 3))
+    return buildTaxObjectsFaunaLevel2(aeDb, taxFauna, taxObjectsFaunaLevel1)
   })
   .then((result) => {
     taxObjectsFaunaLevel2 = result
-    console.log('taxObjectsFaunaLevel2', taxObjectsFaunaLevel2.slice(0, 5))
-    return buildTaxObjectsFaunaLevel3({ aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2 })
+    console.log('taxObjectsFaunaLevel2', taxObjectsFaunaLevel2.slice(0, 3))
+    return buildTaxObjectsFaunaLevel3(aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2)
   })
   .then((result) => {
     taxObjectsFaunaLevel3 = result
-    console.log('taxObjectsFaunaLevel3', taxObjectsFaunaLevel3.slice(0, 5))
-    return buildTaxObjectsFaunaLevel4({ aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2, taxObjectsFaunaLevel3, objects })
+    console.log('taxObjectsFaunaLevel3', taxObjectsFaunaLevel3.slice(0, 3))
+    return buildTaxObjectsFaunaLevel4(aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2, taxObjectsFaunaLevel3, objects)
   })
   .then((result) => {
     taxObjectsFaunaLevel4 = result
-    console.log('taxObjectsFaunaLevel4', taxObjectsFaunaLevel4.slice(0, 5))
+    console.log('taxObjectsFaunaLevel4', taxObjectsFaunaLevel4.slice(0, 3))
+    console.log('finished building fauna objects')
   })
   .catch((error) => console.log(error))

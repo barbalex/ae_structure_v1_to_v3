@@ -1,26 +1,29 @@
 'use strict'
 
-module.exports = function ({ aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2, taxObjectsFaunaLevel3, objects }) {
+const _ = require('lodash')
+
+module.exports = function (aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2, taxObjectsFaunaLevel3, objects) {
   return new Promise((resolve, reject) => {
     aeDb.view('artendb/baumFauna', {
       group_level: 5
     }, (error, result) => {
       if (error) reject(`error querying view baumFauna: ${error}`)
-      let taxObjectsFaunaLevel4 = result.map((row) => {
+      const keys = _.map(result, (row) => row.key)
+      let taxObjectsFaunaLevel4 = _.map(keys, (key) => {
         const taxonomie = taxFauna._id
-        const klasseObjektName = row[0]
+        const klasseObjektName = key[0]
         const klasseObject = taxObjectsFaunaLevel1.find((taxObj) => taxObj.Name === klasseObjektName)
-        const ordnungObjektName = row[1]
+        const ordnungObjektName = key[1]
         const ordnungObject = taxObjectsFaunaLevel2.find(
           (taxObj) => taxObj.Name === ordnungObjektName && taxObj.parent === klasseObject._id
         )
-        const familieName = row[2]
+        const familieName = key[2]
         const familieObject = taxObjectsFaunaLevel3.find(
           (taxObj) => taxObj.Name === familieName && taxObj.parent === ordnungObject._id
         )
-        const name = row[3]
+        const name = key[3]
         const parent = familieObject._id
-        const objId = row[4]
+        const objId = key[4]
         const object = objects.find((obj) => obj._id === objId)
         const eigenschaften = object.Taxonomie.Eigenschaften
         return {

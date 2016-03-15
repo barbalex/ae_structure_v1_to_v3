@@ -5,7 +5,8 @@ module.exports = function (aeDb) {
       'include_docs': true
     }, (error, res) => {
       if (error) reject(`error getting objects: ${error}`)
-      resolve(res)
+      const objects = res.map((doc) => doc)
+      resolve(objects)
     })
   })
 }
