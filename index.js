@@ -46,6 +46,7 @@ const buildTaxonomiesNonLr = require('./src/buildTaxonomiesNonLr.js')
 const buildTaxonomiesLr = require('./src/buildTaxonomiesLr.js')
 const buildTaxObjectsFaunaLevel1 = require('./src/buildTaxObjectsFaunaLevel1.js')
 const buildTaxObjectsFaunaLevel2 = require('./src/buildTaxObjectsFaunaLevel2.js')
+const buildTaxObjectsFaunaLevel3 = require('./src/buildTaxObjectsFaunaLevel3.js')
 
 let nonLrTaxonomies = null
 let taxonomies = null
@@ -74,6 +75,6 @@ buildTaxonomiesNonLr(aeDb)
   .then((result) => {
     taxObjectsFaunaLevel2 = result
     console.log('taxObjectsFaunaLevel2', taxObjectsFaunaLevel2)
-    // return buildTaxObjectsFaunaLevel2({ aeDb, taxFauna, taxObjectsFaunaLevel1 })
+    return buildTaxObjectsFaunaLevel3({ aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2 })
   })
   .catch((error) => console.log(error))
