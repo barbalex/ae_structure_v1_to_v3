@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = function ({ aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2, taxObjectsFaunaLevel3 }) {
+module.exports = function ({ aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2, taxObjectsFaunaLevel3, objects }) {
   return new Promise((resolve, reject) => {
     aeDb.view('artendb/baumFauna', {
       group_level: 5
@@ -20,13 +20,16 @@ module.exports = function ({ aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFa
         )
         const name = row[3]
         const parent = familieObject._id
+        const objId = row[4]
+        const object = objects.find((obj) => obj._id === objId)
+        const eigenschaften = object.Taxonomie.Eigenschaften
         return {
           Typ: 'Taxonomie-Objekt',
           Taxonomie: taxonomie,
           Name: name,
           Objekt: {
-            id: row[4],
-            Eigenschaften: 'TODO'
+            id: objId,
+            Eigenschaften: eigenschaften
           },
           parent: parent
         }

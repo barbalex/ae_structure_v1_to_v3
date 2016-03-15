@@ -42,19 +42,29 @@ const connection = new (cradle.Connection)(`127.0.0.1`, 5984, {
   }
 })
 const aeDb = connection.database('artendb')
+const getObjects = require('./src/getObjects.js')
 const buildTaxonomiesNonLr = require('./src/buildTaxonomiesNonLr.js')
 const buildTaxonomiesLr = require('./src/buildTaxonomiesLr.js')
 const buildTaxObjectsFaunaLevel1 = require('./src/buildTaxObjectsFaunaLevel1.js')
 const buildTaxObjectsFaunaLevel2 = require('./src/buildTaxObjectsFaunaLevel2.js')
 const buildTaxObjectsFaunaLevel3 = require('./src/buildTaxObjectsFaunaLevel3.js')
+const buildTaxObjectsFaunaLevel4 = require('./src/buildTaxObjectsFaunaLevel4.js')
 
+let objects = null
 let nonLrTaxonomies = null
 let taxonomies = null
 let taxFauna = null
 let taxObjectsFaunaLevel1 = null
 let taxObjectsFaunaLevel2 = null
+let taxObjectsFaunaLevel3 = null
+let taxObjectsFaunaLevel4 = null
 
-buildTaxonomiesNonLr(aeDb)
+getObjects(aeDb)
+  .then((result) => {
+    objects = result
+    console.log('objects[0]', objects[0])
+    return buildTaxonomiesNonLr(aeDb)
+  })
   .then((result) => {
     nonLrTaxonomies = result
     console.log('nonLrTaxonomies', nonLrTaxonomies)
@@ -76,5 +86,14 @@ buildTaxonomiesNonLr(aeDb)
     taxObjectsFaunaLevel2 = result
     console.log('taxObjectsFaunaLevel2', taxObjectsFaunaLevel2)
     return buildTaxObjectsFaunaLevel3({ aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2 })
+  })
+  .then((result) => {
+    taxObjectsFaunaLevel3 = result
+    console.log('taxObjectsFaunaLevel3', taxObjectsFaunaLevel3)
+    return buildTaxObjectsFaunaLevel4({ aeDb, taxFauna, taxObjectsFaunaLevel1, taxObjectsFaunaLevel2, taxObjectsFaunaLevel3, objects })
+  })
+  .then((result) => {
+    taxObjectsFaunaLevel4 = result
+    console.log('taxObjectsFaunaLevel4', taxObjectsFaunaLevel4)
   })
   .catch((error) => console.log(error))
