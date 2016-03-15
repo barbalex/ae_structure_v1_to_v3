@@ -35,7 +35,6 @@ module.exports = function (aeDb) {
         // update taxonomies
         results.forEach((res, i) => {
           let taxonomy = taxonomies[i]
-          taxonomy._id = res.id
           taxonomy._rev = res.rev
         })
         resolve(taxonomies)

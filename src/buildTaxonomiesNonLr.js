@@ -14,7 +14,6 @@ module.exports = function (aeDb) {
       // update nonLrTaxonomies
       results.forEach((res, i) => {
         let nonLrTaxonomy = nonLrTaxonomies[i]
-        nonLrTaxonomy._id = res.id
         nonLrTaxonomy._rev = res.rev
       })
       resolve(nonLrTaxonomies)

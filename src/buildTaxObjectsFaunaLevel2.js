@@ -29,7 +29,6 @@ module.exports = function (aeDb, taxFauna, taxObjectsFaunaLevel1) {
         // update taxObjectsFaunaLevel2
         results.forEach((res, i) => {
           let taxObj = taxObjectsFaunaLevel2[i]
-          taxObj._id = res.id
           taxObj._rev = res.rev
         })
         resolve(taxObjectsFaunaLevel2)
