@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = ({ aeDb, taxFauna }) => {
+module.exports = function ({ aeDb, taxFauna }) {
   return new Promise((resolve, reject) => {
     aeDb.view('artendb/baumFauna', {
       group_level: 1

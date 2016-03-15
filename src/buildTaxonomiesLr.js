@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = (aeDb) => {
+module.exports = function (aeDb) {
   return new Promise((resolve, reject) => {
     aeDb.view('artendb/baumLr', {
       startkey: [1],

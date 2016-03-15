@@ -2,7 +2,7 @@
 
 let nonLrTaxonomies = require('./nonLrTaxonomies.js')
 
-module.exports = (aeDb) => {
+module.exports = function (aeDb) {
   return new Promise((resolve, reject) => {
     // console.log('buildTaxonomiesNonLr would save', nonLrTaxonomies)
     resolve(true)
