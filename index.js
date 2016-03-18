@@ -46,15 +46,22 @@ const getObjects = require('./src/getObjects.js')
 const buildTaxonomiesNonLr = require('./src/buildTaxonomiesNonLr.js')
 const buildTaxonomiesLr = require('./src/buildTaxonomiesLr.js')
 const buildTaxObjectsFauna = require('./src/buildTaxObjectsFauna.js')
+const buildTaxObjectsFlora = require('./src/buildTaxObjectsFlora.js')
 
 let objects = null
 let taxonomies = null
 let lrTaxonomies = null
 let taxFauna = null
+let taxFlora = null
+let taxPilze = null
+let taxMoose = null
 let taxObjectsFaunaLevel1 = null
 let taxObjectsFaunaLevel2 = null
 let taxObjectsFaunaLevel3 = null
 let taxObjectsFaunaLevel4 = null
+let taxObjectsFloraLevel1 = null
+let taxObjectsFloraLevel2 = null
+let taxObjectsFloraLevel3 = null
 
 getObjects(aeDb)
   .then((result) => {
@@ -72,6 +79,9 @@ getObjects(aeDb)
     console.log('lrTaxonomies', lrTaxonomies.slice(0, 2))
     // get id of CSCF (2009)
     taxFauna = taxonomies.find((taxonomy) => taxonomy.Name === 'CSCF (2009)')
+    taxFlora = taxonomies.find((taxonomy) => taxonomy.Name === 'SISF Index 2 (2005)')
+    taxPilze = taxonomies.find((taxonomy) => taxonomy.Name === 'Swissfunghi (2011)')
+    taxMoose = taxonomies.find((taxonomy) => taxonomy.Name === 'NISM (2010)')
     return buildTaxObjectsFauna(aeDb, taxFauna, objects)
   })
   .then((result) => {
@@ -79,5 +89,12 @@ getObjects(aeDb)
     taxObjectsFaunaLevel2 = result[1]
     taxObjectsFaunaLevel3 = result[2]
     taxObjectsFaunaLevel4 = result[3]
+    return buildTaxObjectsFlora(aeDb, taxFlora, objects)
+  })
+  .then((result) => {
+    taxObjectsFloraLevel1 = result[0]
+    taxObjectsFloraLevel2 = result[1]
+    taxObjectsFloraLevel3 = result[2]
+    //return buildTaxObjectsFlora(aeDb, taxFlora, objects)
   })
   .catch((error) => console.log(error))
