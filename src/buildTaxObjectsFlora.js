@@ -25,7 +25,7 @@ module.exports = function (aeDb, taxFlora, objects) {
         taxObjectsFloraLevel3 = result
         console.log('taxObjectsFloraLevel3', taxObjectsFloraLevel3.slice(0, 2))
         console.log('finished building flora objects')
-        resolve(taxObjectsFloraLevel1, taxObjectsFloraLevel2, taxObjectsFloraLevel3, taxObjectsFloraLevel3)
+        resolve(taxObjectsFloraLevel1, taxObjectsFloraLevel2, taxObjectsFloraLevel3)
       })
       .catch((error) => reject(error))
   })

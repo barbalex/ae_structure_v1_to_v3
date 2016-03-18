@@ -13,10 +13,10 @@
 const _ = require('lodash')
 
 const hierarchyFieldsOfGroups = {
-  'Fauna': ['Klasse', 'Ordnung', 'Familie', 'Gattung'], // hat funktioniert
-  'Flora': ['Familie', 'Gattung'], // Gattung fehlt!
-  'Moose': ['Klasse', 'Familie', 'Gattung'], // Gattung fehlt!
-  'Macromycetes': ['Gattung'] // Gattung fehlt!
+  'Fauna': ['Klasse', 'Ordnung', 'Familie', 'Gattung'],
+  'Flora': ['Familie', 'Gattung'],
+  'Moose': ['Klasse', 'Familie', 'Gattung'],
+  'Macromycetes': ['Gattung']
 }
 
 let docsWritten = 0

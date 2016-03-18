@@ -47,6 +47,8 @@ const buildTaxonomiesNonLr = require('./src/buildTaxonomiesNonLr.js')
 const buildTaxonomiesLr = require('./src/buildTaxonomiesLr.js')
 const buildTaxObjectsFauna = require('./src/buildTaxObjectsFauna.js')
 const buildTaxObjectsFlora = require('./src/buildTaxObjectsFlora.js')
+const buildTaxObjectsPilze = require('./src/buildTaxObjectsPilze.js')
+const buildTaxObjectsMoose = require('./src/buildTaxObjectsMoose.js')
 
 let objects = null
 let taxonomies = null
@@ -62,6 +64,11 @@ let taxObjectsFaunaLevel4 = null
 let taxObjectsFloraLevel1 = null
 let taxObjectsFloraLevel2 = null
 let taxObjectsFloraLevel3 = null
+let taxObjectsPilzeLevel1 = null
+let taxObjectsPilzeLevel2 = null
+let taxObjectsMooseLevel1 = null
+let taxObjectsMooseLevel2 = null
+let taxObjectsMooseLevel3 = null
 
 getObjects(aeDb)
   .then((result) => {
@@ -95,6 +102,16 @@ getObjects(aeDb)
     taxObjectsFloraLevel1 = result[0]
     taxObjectsFloraLevel2 = result[1]
     taxObjectsFloraLevel3 = result[2]
-    //return buildTaxObjectsFlora(aeDb, taxFlora, objects)
+    return buildTaxObjectsPilze(aeDb, taxPilze, objects)
+  })
+  .then((result) => {
+    taxObjectsPilzeLevel1 = result[0]
+    taxObjectsPilzeLevel2 = result[1]
+    return buildTaxObjectsMoose(aeDb, taxPilze, objects)
+  })
+  .then((result) => {
+    taxObjectsMooseLevel1 = result[0]
+    taxObjectsMooseLevel2 = result[1]
+    taxObjectsMooseLevel3 = result[2]
   })
   .catch((error) => console.log(error))
