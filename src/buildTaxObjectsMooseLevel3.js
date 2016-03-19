@@ -3,10 +3,10 @@
 const _ = require('lodash')
 const uuid = require('node-uuid')
 
-module.exports = function (aeDb, taxMoose, taxObjectsMooseLevel1, taxObjectsMooseLevel2, objects) {
+module.exports = function (aeDb, taxMoose, taxObjectsMooseLevel1, taxObjectsMooseLevel2) {
   return new Promise((resolve, reject) => {
     aeDb.view('artendb/baumMoose', {
-      group_level: 4
+      group_level: 3
     }, (error, result) => {
       if (error) reject(`error querying view baumMoose: ${error}`)
       const keys = _.map(result, (row) => row.key)
@@ -16,24 +16,17 @@ module.exports = function (aeDb, taxMoose, taxObjectsMooseLevel1, taxObjectsMoos
         const klasseObject = taxObjectsMooseLevel1.find(
           (taxObj) => taxObj.Name === klasseObjektName
         )
-        const gattungName = key[1]
-        const gattungObject = taxObjectsMooseLevel2.find(
-          (taxObj) => taxObj.Name === gattungName && taxObj.parent === klasseObject._id
+        const familieName = key[1]
+        const familieObject = taxObjectsMooseLevel2.find(
+          (taxObj) => taxObj.Name === familieName && taxObj.parent === klasseObject._id
         )
         const name = key[2]
-        const parent = gattungObject._id
-        const objId = key[4]
-        const object = objects.find((obj) => obj._id === objId)
-        const eigenschaften = object.Taxonomie.Eigenschaften
+        const parent = familieObject._id
         return {
           _id: uuid.v4(),
           Typ: 'Taxonomie-Objekt',
           Taxonomie: taxonomie,
           Name: name,
-          Objekt: {
-            id: objId,
-            Eigenschaften: eigenschaften
-          },
           parent: parent
         }
       })

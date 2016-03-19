@@ -6,7 +6,7 @@ const uuid = require('node-uuid')
 module.exports = function (aeDb, taxPilze, taxObjectsPilzeLevel1, objects) {
   return new Promise((resolve, reject) => {
     aeDb.view('artendb/baumMacromycetes', {
-      group_level: 2
+      group_level: 3
     }, (error, result) => {
       if (error) reject(`error querying view baumMacromycetes: ${error}`)
       const keys = _.map(result, (row) => row.key)
@@ -18,6 +18,7 @@ module.exports = function (aeDb, taxPilze, taxObjectsPilzeLevel1, objects) {
         const parent = gattungObject._id
         const objId = key[2]
         const object = objects.find((obj) => obj._id === objId)
+        if (!object) console.log('no object found for objId', objId)
         const eigenschaften = object.Taxonomie.Eigenschaften
         return {
           _id: uuid.v4(),
