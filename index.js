@@ -1,21 +1,6 @@
 'use strict'
 
 /*
- * Taxonomie-Objekte aufbauen
- * 1. Taxonomien aufbauen
- *    do it manually
- * 2. für Taxonomie-Fauna:
- *    view baumFauna, group-level 1: level1-TaxObj bauen
- *    view baumFauna, group-level 2: level2-TaxObj bauen
- *    view baumFauna, group-level 3: level3-TaxObj bauen
- *    view baumFauna, group-level 5: level4-TaxObj bauen
- *    last level: update field Taxonomien of Objekt
- * 3. dito für Flora (level 1 bis 3),
- *    dito für Moose (level 1 bis 4),
- *    dito für Pilze (level 1 bis 2)
- */
-
-/*
  * Taxonomie-Objekte für LR aufbauen
  *
  * use view baumLr because the order makes sure,
