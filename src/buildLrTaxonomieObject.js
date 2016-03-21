@@ -1,0 +1,38 @@
+'use strict'
+
+const uuid = require('node-uuid')
+
+module.exports = function (aeDb, doc, index, lrTaxonomies) {
+  // this is lr > create Taxonomie-Objekt
+  // first check needed fields
+  if (!doc.Taxonomie.Eigenschaften.Parent) {
+    return console.error(`lr hat keinen Taxonomie.Eigenschaften.Parent`, doc)
+  } else if (!doc.Taxonomie.Name) {
+    return console.error(`lr hat keinen Taxonomie.Name`, doc)
+  } else {
+    const taxonomie = lrTaxonomies.find((tax) => tax.Name === doc.Taxonomie.Name)
+    if (!taxonomie) return console.error('für diese lr keine Taxonomie gefunden', doc)
+    const name = doc.Label ? `${doc.Label}: ${doc.Einheit}` : doc.Einheit
+    const parent = doc.Taxonomie.Eigenschaften.Parent
+    const eigenschaften = doc.Taxonomie.Eigenschaften
+    // remove Parent and Hierarchie
+    if (eigenschaften.Parent) delete eigenschaften.Parent
+    if (eigenschaften.Hierarchie) delete eigenschaften.Hierarchie
+    const taxObj = {
+      _id: uuid.v4(),
+      Typ: 'Taxonomie-Objekt',
+      Taxonomie: taxonomie._id,
+      Name: name,
+      Objekt: {
+        id: doc._id,
+        Eigenschaften: eigenschaften
+      },
+      parent: parent
+    }
+    // save this Taxonomie-Objekt
+    aeDb.save(taxObj, (error, res) => {
+      if (error) console.error('error saving taxObj', taxObj)
+      if (index < 5) console.log(`lrTaxonomy-Object Nr. ${index}`, taxObj)
+    })
+  }
+}

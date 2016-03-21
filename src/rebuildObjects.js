@@ -4,14 +4,14 @@
  * Objekt neu aufbauen
  * damit die Reihenfolge passt und die Taxonomie die Gruppe enthält
  * Reihenfolge:
- * 1. Taxonomie
- * 2. Taxonomien
- * 3. Eigenschaftensammlungen
- * 4. Beziehungssammlungen
+ * 1. Eigenschaftensammlungen
+ * 2. Beziehungssammlungen
+ *
+ * bei LR: LR-Taxonomie-Objekte bauen
  */
 
 const _ = require('lodash')
-const uuid = require('node-uuid')
+const buildLrTaxonomieObject = require('./buildLrTaxonomieObject.js')
 
 let docsWritten = 0
 
@@ -31,7 +31,6 @@ module.exports = function (aeDb, lrTaxonomies) {
 
     let docs = []
     let docsPrepared = 0
-    let taxObjectsLr = []
 
     // loop through docs
     res.rows.forEach((row, index) => {
@@ -44,11 +43,11 @@ module.exports = function (aeDb, lrTaxonomies) {
 
       // check fields that should exist
       if (!doc.Eigenschaftensammlungen) {
-        console.log(`doc hatte keine Eigenschaftensammlungen`, doc)
+        console.log(`Eigenschaftensammlungen mussten ergänzt werden`, doc)
         doc.Eigenschaftensammlungen = []
       }
       if (!doc.Beziehungssammlungen) {
-        console.log(`doc hatte keine Beziehungssammlungen`, doc)
+        console.log(`Beziehungssammlungen mussten ergänzt werden`, doc)
         doc.Beziehungssammlungen = []
       }
 
@@ -64,46 +63,11 @@ module.exports = function (aeDb, lrTaxonomies) {
       })
 
       // build taxonomie-Objekte for LR, remove Taxonomie(n)
-      if (doc.Gruppe === 'Lebensräume') {
-        // this is lr > create Taxonomie-Objekt
-        // first check needed fields
-        if (!doc.Taxonomie.Eigenschaften.Parent) {
-          return console.error(`lr hat keinen Taxonomie.Eigenschaften.Parent`, doc)
-        } else if (!doc.Taxonomie.Name) {
-          return console.error(`lr hat keinen Taxonomie.Name`, doc)
-        } else {
-          const taxonomie = lrTaxonomies.find((tax) => tax.Name === doc.Taxonomie.Name)
-          if (!taxonomie) return console.error('für diese lr keine Taxonomie gefunden', doc)
-          const name = doc.Label ? `${doc.Label}: ${doc.Einheit}` : doc.Einheit
-          const parent = doc.Taxonomie.Eigenschaften.Parent
-          const eigenschaften = doc.Taxonomie.Eigenschaften
-          // remove Parent and Hierarchie
-          if (eigenschaften.Parent) delete eigenschaften.Parent
-          if (eigenschaften.Hierarchie) delete eigenschaften.Hierarchie
-          const taxObj = {
-            _id: uuid.v4(),
-            Typ: 'Taxonomie-Objekt',
-            Taxonomie: taxonomie._id,
-            Name: name,
-            Objekt: {
-              id: doc._id,
-              Eigenschaften: eigenschaften
-            },
-            parent: parent
-          }
-          // save this Taxonomie-Objekt
-          aeDb.save(taxObj, (error, res) => {
-            if (error) console.error('error saving taxObj', taxObj)
-            // update taxObjectsLr
-            taxObj._rev = res.rev
-            taxObjectsLr.push(taxObj)
-          })
-        }
-      }
+      if (doc.Gruppe === 'Lebensräume') buildLrTaxonomieObject(aeDb, doc, index, lrTaxonomies)
 
       // remove Taxonomie(n)
       delete doc.Taxonomie
-      if (doc.Taxonomie) delete doc.Taxonomien
+      if (doc.Taxonomien) delete doc.Taxonomien
       // now manipulate order of properties
       // first clone es and bs
       const newEs = _.cloneDeep(doc.Eigenschaftensammlungen)
