@@ -15,7 +15,7 @@ module.exports = function (aeDb, doc, index, lrTaxonomies) {
     const taxonomie = lrTaxonomies.find((tax) => tax.Name === doc.Taxonomie.Name)
     if (!taxonomie) return console.error('für diese lr keine Taxonomie gefunden', doc)
     const name = doc.Label ? `${doc.Label}: ${doc.Einheit}` : doc.Einheit
-    const parent = doc.Taxonomie.Eigenschaften.Parent.GUID  // TODO: get this object's Taxonomie-Objekt!!
+    const parentObject = doc.Taxonomie.Eigenschaften.Parent.GUID  // TODO: get this object's Taxonomie-Objekt!!
     const eigenschaften = doc.Taxonomie.Eigenschaften
     // remove Parent and Hierarchie
     if (eigenschaften.Parent) delete eigenschaften.Parent
@@ -29,7 +29,8 @@ module.exports = function (aeDb, doc, index, lrTaxonomies) {
         id: doc._id,
         Eigenschaften: eigenschaften
       },
-      parent: parent
+      parent: null,
+      parentObject: parentObject
     }
     // save this Taxonomie-Objekt
     aeDb.save(taxObj, (error, res) => {

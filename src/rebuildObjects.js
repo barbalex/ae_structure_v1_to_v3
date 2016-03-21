@@ -1,16 +1,5 @@
 'use strict'
 
-/*
- * Objekt neu aufbauen
- * damit die Reihenfolge passt und die Taxonomie die Gruppe enthält
- * Reihenfolge:
- * 1. Eigenschaftensammlungen
- * 2. Beziehungssammlungen
- *
- * bei LR: LR-Taxonomie-Objekte bauen
- */
-
-const _ = require('lodash')
 const buildLrTaxonomieObject = require('./buildLrTaxonomieObject.js')
 
 let docsWritten = 0
