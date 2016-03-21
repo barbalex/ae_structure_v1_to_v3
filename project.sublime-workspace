@@ -4,26 +4,6 @@
 		"selected_items":
 		[
 			[
-				"obj",
-				"objects"
-			],
-			[
-				"par",
-				"parentObject"
-			],
-			[
-				"tax",
-				"taxObjectsFaunaLevel1"
-			],
-			[
-				"nonL",
-				"nonLrTaxonomies"
-			],
-			[
-				"non",
-				"nonLrTaxonomy"
-			],
-			[
 				"rou",
 				"routes"
 			],
@@ -60,7 +40,7 @@
 	"buffers":
 	[
 		{
-			"file": "/D/Google Drive/artendb/push.txt",
+			"file": "/D/gd/artendb/push.txt",
 			"settings":
 			{
 				"buffer_size": 7189,
@@ -71,64 +51,33 @@
 			"file": "index.js",
 			"settings":
 			{
-				"buffer_size": 2511,
+				"buffer_size": 3449,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/buildTaxObjectsFauna.js",
+			"file": "src/rebuildObjects.js",
 			"settings":
 			{
-				"buffer_size": 1751,
+				"buffer_size": 2575,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/buildTaxObjectsFaunaLevel1.js",
+			"file": "src/buildLrTaxonomieObject.js",
 			"settings":
 			{
-				"buffer_size": 910,
+				"buffer_size": 1619,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/buildTaxObjectsFaunaLevel2.js",
+			"contents": "function(doc) {\n  if (doc.Typ === 'Taxonomie-Objekt' && doc.Taxonomie && doc.Taxonomie === '02297cb4-f8d8-4ff2-a41e-dd51dc875814')\n  emit(null, doc);\n}",
 			"settings":
 			{
-				"buffer_size": 1190,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/buildTaxObjectsFaunaLevel3.js",
-			"settings":
-			{
-				"buffer_size": 1437,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/buildTaxObjectsFaunaLevel4.js",
-			"settings":
-			{
-				"buffer_size": 1904,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/buildTaxonomiesLr.js",
-			"settings":
-			{
-				"buffer_size": 1511,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/buildTaxonomiesNonLr.js",
-			"settings":
-			{
-				"buffer_size": 558,
-				"line_ending": "Windows"
+				"buffer_size": 151,
+				"line_ending": "Windows",
+				"name": "function(doc) {"
 			}
 		}
 	],
@@ -177,21 +126,16 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/alex/ae_structure_v1_to_v3",
-		"/C/Users/alex/ae_structure_v1_to_v3/src"
+		"/C/Users/Alexander/ae_structure_v1_to_v3",
+		"/C/Users/Alexander/ae_structure_v1_to_v3/src"
 	],
 	"file_history":
 	[
-		"/C/Users/alex/ae_structure_v1_to_v3/src/nonLrTaxonomies.js",
-		"/C/Users/alex/ae_structure_v1_to_v3/src/buildTaxonomiesNonLr.js",
-		"/C/Users/alex/ae_structure_v1_to_v3/src/buildTaxObjectsFaunaLevel4.js",
-		"/C/Users/alex/ae_structure_v1_to_v3/src/buildTaxObjectsFaunaLevel3.js",
-		"/C/Users/alex/ae_structure_v1_to_v3/src/buildTaxObjectsFaunaLevel2.js",
-		"/C/Users/alex/ae_structure_v1_to_v3/src/buildTaxonomiesLr.js",
-		"/C/Users/alex/ae_structure_v1_to_v3/src/getObjects.js",
-		"/C/Users/alex/ae_structure_v1_to_v3/src/rebuildObjects.js",
-		"/C/Users/alex/ae_structure_v1_to_v3/src/buildTaxObjectsFaunaLevel1.js",
-		"/C/Users/alex/ae_structure_v1_to_v3/package.json",
+		"/C/Users/Alexander/ae_structure_v1_to_v3/src/buildTaxObjectsFauna.js",
+		"/C/Users/Alexander/ae_structure_v1_to_v3/src/buildTaxonomiesNonLr.js",
+		"/C/Users/Alexander/ae_structure_v1_to_v3/src/buildTaxonomiesLr.js",
+		"/C/Users/Alexander/ae_structure_v1_to_v3/package.json",
+		"/D/Google Drive/artendb/push.txt",
 		"/C/Users/alex/ae_structure_v1_to_v3/readme.md",
 		"/C/Users/alex/ae_taxonomien/index.js",
 		"/C/Users/alex/apflora_api/configuration.js",
@@ -309,7 +253,12 @@
 		"/C/Users/alex/apflora_api/queries/ap.js",
 		"/C/Users/alex/apflora_api/queries/beobNaechsteTpop.js",
 		"/C/Users/alex/apflora_api/queries/feldkontrZaehleinheit.js",
-		"/C/Users/alex/apflora_api/queries/gemeinden.js"
+		"/C/Users/alex/apflora_api/queries/gemeinden.js",
+		"/C/Users/alex/apflora_api/queries/idealbiotopUebereinst.js",
+		"/C/Users/alex/apflora_api/queries/lrDelarze.js",
+		"/C/Users/alex/apflora_api/queries/popChKarte.js",
+		"/C/Users/alex/apflora_api/queries/exportViewWhereIdIn.js",
+		"/C/Users/alex/apflora_api/queries/exportView.js"
 	],
 	"find":
 	{
@@ -334,30 +283,6 @@
 		"case_sensitive": true,
 		"find_history":
 		[
-			"nonLrTaxonomies",
-			"taxonomies",
-			"slice(0, 3)",
-			"row",
-			"slice(0, 5)",
-			"taxObjectsFaunaLevel3",
-			"parentObject",
-			"parentName",
-			"parentObject",
-			"grandParent",
-			"parentObject",
-			"parentName",
-			"grandParent",
-			"taxObjectsFaunaLevel3",
-			"buildTaxObjectsFaunaLevel3",
-			"buildTaxObjectsFaunaLevel2",
-			"taxonomyObjectsFaunaLevel1",
-			"buildTaxObjectsFaunaLevel2",
-			"taxObjectsFaunaLevel1",
-			"taxonomyObjectsFaunaLevel1",
-			"buildTaxObjectsFauna",
-			"taxonomy",
-			"nonLrTaxonomy",
-			",\n    children: []",
 			"aeDbConn",
 			"buildNonLrTaxonomies",
 			"buildLrTaxonomies",
@@ -461,7 +386,31 @@
 			"smallint(5)",
 			"int(2)",
 			"int(7)",
-			"int(10)"
+			"int(10)",
+			"longtext",
+			".MutWer IS",
+			".MutWann IS",
+			"int",
+			"int(5)",
+			"int",
+			"int(11)",
+			"PRIMARY",
+			"smallint(5)",
+			"int(10)",
+			"my_column",
+			" COMMENT ''",
+			"Von wem wurde der Datensatz zuletzt geaendert?",
+			"Wann wurde der Datensatz zuletzt geaendert?",
+			" COMMENT ''",
+			"'comment'",
+			" COMMENT ''",
+			"tblJBer",
+			"tblJBerUebersicht",
+			"tblIbArtenAssoz",
+			"tblBer",
+			"tblErfKrit",
+			"DomainApErfKrit",
+			"tblIdealbiotop"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -469,31 +418,6 @@
 		"regex": false,
 		"replace_history":
 		[
-			"taxonomies",
-			"lrTaxonomies",
-			"slice(0, 2)",
-			"key",
-			"slice(0, 3)",
-			"taxObjectsFaunaLevel4",
-			"klasseObject",
-			"klasseName",
-			"ordnungName",
-			"ordnungObject",
-			"klasse",
-			"familieObject",
-			"familieName",
-			"ordnung",
-			"taxObjectsFaunaLevel4",
-			"taxObjectsFaunaLevel3",
-			"taxObjectsFaunaLevel2",
-			"taxObjectsFaunaLevel1",
-			"buildTaxObjectsFaunaLevel3",
-			"taxObjectsFaunaLevel2",
-			"buildTaxObjectsFaunaLevel2",
-			"buildTaxObjectsFaunaLevel1",
-			"taxObj",
-			"taxonomy",
-			"",
 			"connection",
 			"buildTaxonomiesNonLr",
 			"buildTaxonomiesLr",
@@ -596,7 +520,32 @@
 			"tpop_apberrelevant_werte",
 			"tpop",
 			"popmassnber",
-			"popber"
+			"popber",
+			"pop_status_werte",
+			"pop_entwicklung_werte",
+			"pop",
+			"idealbiotop",
+			"erfkrit",
+			"ber",
+			"beobzuordnung",
+			"assozart",
+			"apberuebersicht",
+			"apber",
+			"ap_umsetzung_werte",
+			"ap_erfkrit_werte",
+			"ap_erfbeurtkrit_werte",
+			"ap_bearbstand_werte",
+			"ap",
+			"adresse",
+			"",
+			"'",
+			"apflora.ap.ApArtId AS ApArtId",
+			"-- ",
+			"tpopmassn_erfbeurt_werte",
+			"popmassnber",
+			"PopMassnBerJahr",
+			"v_pop_letzterpopbermassn",
+			"v_pop_letzterpopber0_overall"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -607,12 +556,12 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 3,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "/D/Google Drive/artendb/push.txt",
+					"file": "/D/gd/artendb/push.txt",
 					"semi_transient": false,
 					"settings":
 					{
@@ -623,8 +572,8 @@
 						"selection":
 						[
 							[
-								242,
-								214
+								136,
+								64
 							]
 						],
 						"settings":
@@ -635,7 +584,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -644,15 +593,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2511,
+						"buffer_size": 3449,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1614,
-								1614
+								1115,
+								1115
 							]
 						],
 						"settings":
@@ -662,115 +611,57 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1782.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/buildTaxObjectsFauna.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1751,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								326,
-								326
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/buildTaxObjectsFaunaLevel1.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 910,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								124,
-								165
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/buildTaxObjectsFaunaLevel2.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1190,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1066,
-								1066
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2574.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "src/buildTaxObjectsFaunaLevel3.js",
+					"buffer": 2,
+					"file": "src/rebuildObjects.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1437,
+						"buffer_size": 2575,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1313,
-								1313
+								2320,
+								2320
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1485.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/buildLrTaxonomieObject.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1619,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								903,
+								903
 							]
 						],
 						"settings":
@@ -783,97 +674,35 @@
 						"translation.y": 99.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "src/buildTaxObjectsFaunaLevel4.js",
+					"buffer": 4,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1904,
+						"buffer_size": 151,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1780,
-								1780
+								151,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 198.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "src/buildTaxonomiesLr.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1511,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1409,
-								1409
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"auto_name": "function(doc) {",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "src/buildTaxonomiesNonLr.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 558,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								52,
-								67
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
