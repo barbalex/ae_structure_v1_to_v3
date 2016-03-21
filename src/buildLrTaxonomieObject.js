@@ -7,13 +7,15 @@ module.exports = function (aeDb, doc, index, lrTaxonomies) {
   // first check needed fields
   if (!doc.Taxonomie.Eigenschaften.Parent) {
     return console.error(`lr hat keinen Taxonomie.Eigenschaften.Parent`, doc)
+  } else if (!Taxonomie.Eigenschaften.Parent.GUID) {
+    return console.error(`lr hat keinen Taxonomie.Eigenschaften.Parent.GUID`, doc)
   } else if (!doc.Taxonomie.Name) {
     return console.error(`lr hat keinen Taxonomie.Name`, doc)
   } else {
     const taxonomie = lrTaxonomies.find((tax) => tax.Name === doc.Taxonomie.Name)
     if (!taxonomie) return console.error('für diese lr keine Taxonomie gefunden', doc)
     const name = doc.Label ? `${doc.Label}: ${doc.Einheit}` : doc.Einheit
-    const parent = doc.Taxonomie.Eigenschaften.Parent
+    const parent = doc.Taxonomie.Eigenschaften.Parent.GUID
     const eigenschaften = doc.Taxonomie.Eigenschaften
     // remove Parent and Hierarchie
     if (eigenschaften.Parent) delete eigenschaften.Parent
@@ -32,7 +34,8 @@ module.exports = function (aeDb, doc, index, lrTaxonomies) {
     // save this Taxonomie-Objekt
     aeDb.save(taxObj, (error, res) => {
       if (error) console.error('error saving taxObj', taxObj)
-      if (index < 5) console.log(`lrTaxonomy-Object Nr. ${index}`, taxObj)
+      // console.log does not appear !?
+      // if (index < 5) console.log(`lrTaxonomy-Object Nr. ${index}`, taxObj)
     })
   }
 }
