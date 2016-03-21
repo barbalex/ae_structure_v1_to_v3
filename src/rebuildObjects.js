@@ -68,16 +68,6 @@ module.exports = function (aeDb, lrTaxonomies) {
       // remove Taxonomie(n)
       delete doc.Taxonomie
       if (doc.Taxonomien) delete doc.Taxonomien
-      // now manipulate order of properties
-      // first clone es and bs
-      const newEs = _.cloneDeep(doc.Eigenschaftensammlungen)
-      const newBs = _.cloneDeep(doc.Beziehungssammlungen)
-      // remove old versions
-      delete doc.Eigenschaftensammlungen
-      delete doc.Beziehungssammlungen
-      // now add in wanted order
-      doc.Eigenschaftensammlungen = newEs
-      doc.Beziehungssammlungen = newBs
 
       docs.push(doc)
 
