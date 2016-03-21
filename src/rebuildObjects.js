@@ -11,17 +11,11 @@
  */
 
 const _ = require('lodash')
-
-const hierarchyFieldsOfGroups = {
-  'Fauna': ['Klasse', 'Ordnung', 'Familie', 'Gattung'],
-  'Flora': ['Familie', 'Gattung'],
-  'Moose': ['Klasse', 'Familie', 'Gattung'],
-  'Macromycetes': ['Gattung']
-}
+const uuid = require('node-uuid')
 
 let docsWritten = 0
 
-module.exports = function (aeDb) {
+module.exports = function (aeDb, lrTaxonomies) {
   function bulkSave (docs) {
     aeDb.save(docs, (error, result) => {
       if (error) return console.log('error after bulk:', error)
@@ -37,93 +31,97 @@ module.exports = function (aeDb) {
 
     let docs = []
     let docsPrepared = 0
+    let taxObjectsLr = []
 
     // loop through docs
     res.rows.forEach((row, index) => {
       const doc = row.doc
 
+      // check needed fields
+      if (!doc.Gruppe) return console.error(`doc hat keine Gruppe`, doc)
+      if (!doc.Taxonomie) return console.error(`doc hat keine Taxonomie`, doc)
+      if (!doc.Taxonomie.Eigenschaften) return console.error(`doc hat keine Taxonomie.Eigenschaften`, doc)
+
+      // check fields that should exist
+      if (!doc.Eigenschaftensammlungen) {
+        console.log(`doc hatte keine Eigenschaftensammlungen`, doc)
+        doc.Eigenschaftensammlungen = []
+      }
+      if (!doc.Beziehungssammlungen) {
+        console.log(`doc hatte keine Beziehungssammlungen`, doc)
+        doc.Beziehungssammlungen = []
+      }
+
       // add org to all objects...
-      if (doc.Gruppe) doc['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
-
+      doc['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
       // ...to all property collections...
-      if (doc.Eigenschaftensammlungen) {
-        doc.Eigenschaftensammlungen.forEach((es, index) => {
-          doc.Eigenschaftensammlungen[index]['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
-        })
-      }
+      doc.Eigenschaftensammlungen.forEach((es, index) => {
+        doc.Eigenschaftensammlungen[index]['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
+      })
       // ...and to all relation collections
-      if (doc.Beziehungssammlungen) {
-        doc.Beziehungssammlungen.forEach((es, index) => {
-          doc.Beziehungssammlungen[index]['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
-        })
+      doc.Beziehungssammlungen.forEach((es, index) => {
+        doc.Beziehungssammlungen[index]['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
+      })
+
+      // build taxonomie-Objekte for LR, remove Taxonomie(n)
+      if (doc.Gruppe === 'Lebensräume') {
+        // this is lr > create Taxonomie-Objekt
+        // first check needed fields
+        if (!doc.Taxonomie.Eigenschaften.Parent) {
+          return console.error(`lr hat keinen Taxonomie.Eigenschaften.Parent`, doc)
+        } else if (!doc.Taxonomie.Name) {
+          return console.error(`lr hat keinen Taxonomie.Name`, doc)
+        } else {
+          const taxonomie = lrTaxonomies.find((tax) => tax.Name === doc.Taxonomie.Name)
+          if (!taxonomie) return console.error('für diese lr keine Taxonomie gefunden', doc)
+          const name = doc.Label ? `${doc.Label}: ${doc.Einheit}` : doc.Einheit
+          const parent = doc.Taxonomie.Eigenschaften.Parent
+          const eigenschaften = doc.Taxonomie.Eigenschaften
+          // remove Parent and Hierarchie
+          if (eigenschaften.Parent) delete eigenschaften.Parent
+          if (eigenschaften.Hierarchie) delete eigenschaften.Hierarchie
+          const taxObj = {
+            _id: uuid.v4(),
+            Typ: 'Taxonomie-Objekt',
+            Taxonomie: taxonomie._id,
+            Name: name,
+            Objekt: {
+              id: doc._id,
+              Eigenschaften: eigenschaften
+            },
+            parent: parent
+          }
+          // save this Taxonomie-Objekt
+          aeDb.save(taxObj, (error, res) => {
+            if (error) console.error('error saving taxObj', taxObj)
+            // update taxObjectsLr
+            taxObj._rev = res.rev
+            taxObjectsLr.push(taxObj)
+          })
+        }
       }
 
-      // build taxonomien
-      if (doc.Gruppe && doc.Taxonomie && doc.Taxonomie.Eigenschaften) {
-        let neueTax = _.cloneDeep(doc.Taxonomie)
-        if (doc.Gruppe === 'Lebensräume' && neueTax.Eigenschaften.Parent) {
-          // lr: remove parent. Only keep Hierarchie
-          if (!neueTax.Eigenschaften.Parent) {
-            console.log(`lr ${doc._id} hat keinen Parent`)
-          } else if (!neueTax.Eigenschaften.Hierarchie) {
-            console.log(`lr ${doc._id} hat keine Hierarchie`)
-          } else {
-            delete neueTax.Eigenschaften.Parent
-          }
-        } else {
-          // this is a species
-          // need to build Hierarchie
-          let hierarchy = []
-          const hierarchyFields = hierarchyFieldsOfGroups[doc.Gruppe]
-          if (hierarchyFields) {
-            hierarchyFields.forEach((field, index) => {
-              if (neueTax.Eigenschaften[field]) {
-                hierarchy.push({
-                  Name: neueTax.Eigenschaften[field]
-                })
-              } else {
-                hierarchy.push({
-                  Name: `(unbekannte ${field} + )`
-                })
-              }
-            })
-            hierarchy.push({
-              'Name': neueTax.Eigenschaften['Artname vollständig'],
-              'GUID': doc._id
-            })
-            neueTax.Eigenschaften.Hierarchie = hierarchy
-          } else {
-            console.log(`doc ${doc._id} has no hierarchyFields`)
-          }
-        }
-        // set this taxonomy as standard
-        neueTax.Standardtaxonomie = true
-        // add org mit schreibrecht
-        neueTax['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
+      // remove Taxonomie(n)
+      delete doc.Taxonomie
+      if (doc.Taxonomie) delete doc.Taxonomien
+      // now manipulate order of properties
+      // first clone es and bs
+      const newEs = _.cloneDeep(doc.Eigenschaftensammlungen)
+      const newBs = _.cloneDeep(doc.Beziehungssammlungen)
+      // remove old versions
+      delete doc.Eigenschaftensammlungen
+      delete doc.Beziehungssammlungen
+      // now add in wanted order
+      doc.Eigenschaftensammlungen = newEs
+      doc.Beziehungssammlungen = newBs
 
-        // now manipulate order of properties
-        // first clone es and bs
-        const newEs = _.cloneDeep(doc.Eigenschaftensammlungen)
-        const newBs = _.cloneDeep(doc.Beziehungssammlungen)
-        // remove old versions
-        delete doc.Taxonomie
-        if (doc.Eigenschaftensammlungen) delete doc.Eigenschaftensammlungen
-        if (doc.Beziehungssammlungen) delete doc.Beziehungssammlungen
-        // now add in wanted order
-        doc.Taxonomien = [neueTax]
-        doc.Eigenschaftensammlungen = newEs
-        doc.Beziehungssammlungen = newBs
+      docs.push(doc)
 
-        docs.push(doc)
-
-        if ((docs.length > 600) || (index === res.rows.length - 1)) {
-          docsPrepared = docsPrepared + docs.length
-          console.log('docsPrepared', docsPrepared)
-          // save 600 docs
-          bulkSave(docs.splice(0, 600))
-        }
-      } else {
-        console.log(`doc ${doc._id} has no Gruppe or no Taxonomie`)
+      if ((docs.length > 600) || (index === res.rows.length - 1)) {
+        docsPrepared = docsPrepared + docs.length
+        console.log('docsPrepared', docsPrepared)
+        // save 600 docs
+        bulkSave(docs.splice(0, 600))
       }
     })
   })

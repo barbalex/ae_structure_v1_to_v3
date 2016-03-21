@@ -34,6 +34,7 @@ const buildTaxObjectsFauna = require('./src/buildTaxObjectsFauna.js')
 const buildTaxObjectsFlora = require('./src/buildTaxObjectsFlora.js')
 const buildTaxObjectsPilze = require('./src/buildTaxObjectsPilze.js')
 const buildTaxObjectsMoose = require('./src/buildTaxObjectsMoose.js')
+const rebuildObjects = require('./src/rebuildObjects.js')
 
 let objects = null
 let taxonomies = null
@@ -98,5 +99,6 @@ getObjects(aeDb)
     taxObjectsMooseLevel1 = result[0]
     taxObjectsMooseLevel2 = result[1]
     taxObjectsMooseLevel3 = result[2]
+    return rebuildObjects(aeDb, lrTaxonomies)
   })
   .catch((error) => console.log(error))
