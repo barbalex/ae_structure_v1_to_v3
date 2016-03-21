@@ -5,15 +5,15 @@ const buildLrTaxonomieObject = require('./buildLrTaxonomieObject.js')
 let docsWritten = 0
 
 module.exports = function (aeDb, lrTaxonomies) {
-  function bulkSave (docs) {
-    aeDb.save(docs, (error, result) => {
-      if (error) return console.log('error after bulk:', error)
-      docsWritten = docsWritten + docs.length
-      console.log('docsWritten', docsWritten)
-    })
-  }
-
   return new Promise((resolve, reject) => {
+    function bulkSave (docs, end) {
+      aeDb.save(docs, (error, result) => {
+        if (error) return console.log('error after bulk:', error)
+        docsWritten = docsWritten + docs.length
+        console.log('docsWritten', docsWritten)
+        if (end) resolve(true)
+      })
+    }
     aeDb.view('artendb/objekte', {
       'include_docs': true
     }, (error, res) => {
@@ -68,9 +68,9 @@ module.exports = function (aeDb, lrTaxonomies) {
         if ((docs.length > 600) || (index === res.rows.length - 1)) {
           docsPrepared = docsPrepared + docs.length
           console.log('docsPrepared', docsPrepared)
+          const end = index === res.rows.length - 1
           // save 600 docs
-          bulkSave(docs.splice(0, 600))
-          if (index === res.rows.length - 1) resolve(true)
+          bulkSave(docs.splice(0, 600), end)
         }
       })
     })
