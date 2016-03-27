@@ -35,7 +35,6 @@ const buildTaxObjectsFlora = require('./src/buildTaxObjectsFlora.js')
 const buildTaxObjectsPilze = require('./src/buildTaxObjectsPilze.js')
 const buildTaxObjectsMoose = require('./src/buildTaxObjectsMoose.js')
 const rebuildObjects = require('./src/rebuildObjects.js')
-const setParentInLrTaxObjects = require('./src/setParentInLrTaxObjects.js')
 
 let objects = null
 let taxonomies = null
@@ -101,12 +100,5 @@ getObjects(aeDb)
     taxObjectsMooseLevel2 = result[1]
     taxObjectsMooseLevel3 = result[2]
     return rebuildObjects(aeDb, lrTaxonomies)
-  })
-  .then(() => {
-    // wait for all objects to build
-    console.log('waiting for all objects to finish building')
-    setTimeout(function () {
-      setParentInLrTaxObjects(aeDb)
-    }, 10000)
   })
   .catch((error) => console.log(error))
