@@ -11,7 +11,11 @@ module.exports = function (aeDb, lrTaxonomies) {
       if (error) return console.log('error after bulk:', error)
       docsWritten = docsWritten + docs.length
       console.log('docsWritten', docsWritten)
-      if (end) setParentInLrTaxObjects(aeDb)
+      if (end) {
+        setTimeout(function () {
+          setParentInLrTaxObjects(aeDb)
+        }, 40000)
+      }
     })
   }
   aeDb.view('artendb/objekte', {
