@@ -42,19 +42,6 @@ let lrTaxonomies = null
 let taxFauna = null
 let taxFlora = null
 let taxPilze = null
-let taxMoose = null
-let taxObjectsFaunaLevel1 = null
-let taxObjectsFaunaLevel2 = null
-let taxObjectsFaunaLevel3 = null
-let taxObjectsFaunaLevel4 = null
-let taxObjectsFloraLevel1 = null
-let taxObjectsFloraLevel2 = null
-let taxObjectsFloraLevel3 = null
-let taxObjectsPilzeLevel1 = null
-let taxObjectsPilzeLevel2 = null
-let taxObjectsMooseLevel1 = null
-let taxObjectsMooseLevel2 = null
-let taxObjectsMooseLevel3 = null
 
 getObjects(aeDb)
   .then((result) => {
@@ -74,31 +61,10 @@ getObjects(aeDb)
     taxFauna = taxonomies.find((taxonomy) => taxonomy.Name === 'CSCF (2009)')
     taxFlora = taxonomies.find((taxonomy) => taxonomy.Name === 'SISF Index 2 (2005)')
     taxPilze = taxonomies.find((taxonomy) => taxonomy.Name === 'Swissfunghi (2011)')
-    taxMoose = taxonomies.find((taxonomy) => taxonomy.Name === 'NISM (2010)')
     return buildTaxObjectsFauna(aeDb, taxFauna, objects)
   })
-  .then((result) => {
-    taxObjectsFaunaLevel1 = result[0]
-    taxObjectsFaunaLevel2 = result[1]
-    taxObjectsFaunaLevel3 = result[2]
-    taxObjectsFaunaLevel4 = result[3]
-    return buildTaxObjectsFlora(aeDb, taxFlora, objects)
-  })
-  .then((result) => {
-    taxObjectsFloraLevel1 = result[0]
-    taxObjectsFloraLevel2 = result[1]
-    taxObjectsFloraLevel3 = result[2]
-    return buildTaxObjectsPilze(aeDb, taxPilze, objects)
-  })
-  .then((result) => {
-    taxObjectsPilzeLevel1 = result[0]
-    taxObjectsPilzeLevel2 = result[1]
-    return buildTaxObjectsMoose(aeDb, taxPilze, objects)
-  })
-  .then((result) => {
-    taxObjectsMooseLevel1 = result[0]
-    taxObjectsMooseLevel2 = result[1]
-    taxObjectsMooseLevel3 = result[2]
-    return rebuildObjects(aeDb, lrTaxonomies)
-  })
+  .then(() => buildTaxObjectsFlora(aeDb, taxFlora, objects))
+  .then(() => buildTaxObjectsPilze(aeDb, taxPilze, objects))
+  .then(() => buildTaxObjectsMoose(aeDb, taxPilze, objects))
+  .then(() => rebuildObjects(aeDb, lrTaxonomies))
   .catch((error) => console.log(error))
