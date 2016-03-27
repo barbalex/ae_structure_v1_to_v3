@@ -6,8 +6,7 @@ Diese Anwendung nimmt die Dokumente von arteigenschaften.ch (Version 1) und baut
 
 - Es gibt Objekte vom Typ "Taxonomie"
 - Es gibt Objekte vom Typ "Taxonomie-Objekt"
-- In Objekten sind Taxonomien wie Eigenschaftensammlungen und Beziehungssammlungen ein Array
-- Jede Taxonomie beschreibt in den Eigenschaften die hierarchische Position ihres Objekts
+- In Objekten gibt es keine Taxonomien mehr
 
 ### Struktur von Objekten des Typs "Taxonomie"
 
@@ -30,7 +29,7 @@ Diese Anwendung nimmt die Dokumente von arteigenschaften.ch (Version 1) und baut
 	Taxonomie: _id der Taxonomie
 	Name
 	Objekt
-	  guid
+	  id
 	  Eigenschaften
 		… (abhängig von der Taxonomie)
 	parent (null für oberste Ebene)
@@ -41,11 +40,7 @@ Diese Anwendung nimmt die Dokumente von arteigenschaften.ch (Version 1) und baut
     _rev
     Gruppe
     Typ: Objekt
-    Taxonomien
-      IDs der Objekte des Typs "Taxonomie-Objekt",
-      welche dieses Objekt in der jeweiligen Taxonomie beschreiben
-	  braucht es das????
     Eigenschaftensammlungen
     Beziehungssammlungen
 
-Jede Taxonomie, Eigenschaften- und Beziehungssammlung und jeder Lebensraum erhält neu: "Organisation mit Schreibrecht": "FNS Kt. ZH"
+Jedes Objekt, jede Eigenschaften- und Beziehungssammlung erhalten neu: "Organisation mit Schreibrecht": "FNS Kt. ZH"
