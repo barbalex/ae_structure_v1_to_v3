@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "cradle": "0.7.1",
-    "lodash": "^4.11.2",
-    "node-uuid": "^1.4.7"
+    "lodash": "4.11.2",
+    "node-uuid": "1.4.7"
   }
 }

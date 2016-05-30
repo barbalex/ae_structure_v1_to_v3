@@ -40,10 +40,10 @@
 	"buffers":
 	[
 		{
-			"file": "/D/gd/artendb/push.txt",
+			"file": "package.json",
 			"settings":
 			{
-				"buffer_size": 7189,
+				"buffer_size": 329,
 				"line_ending": "Windows"
 			}
 		},
@@ -51,23 +51,7 @@
 			"file": "index.js",
 			"settings":
 			{
-				"buffer_size": 3449,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/rebuildObjects.js",
-			"settings":
-			{
-				"buffer_size": 2575,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/buildLrTaxonomieObject.js",
-			"settings":
-			{
-				"buffer_size": 1619,
+				"buffer_size": 2407,
 				"line_ending": "Windows"
 			}
 		},
@@ -126,11 +110,14 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/Alexander/ae_structure_v1_to_v3",
-		"/C/Users/Alexander/ae_structure_v1_to_v3/src"
+		"/C/Users/alex/ae_structure_v1_to_v3",
+		"/C/Users/alex/ae_structure_v1_to_v3/src"
 	],
 	"file_history":
 	[
+		"/C/Users/alex/ae_structure_v1_to_v3/src/buildLrTaxonomieObject.js",
+		"/C/Users/alex/ae_structure_v1_to_v3/src/rebuildObjects.js",
+		"/D/gd/artendb/push.txt",
 		"/C/Users/Alexander/ae_structure_v1_to_v3/src/buildTaxObjectsFauna.js",
 		"/C/Users/Alexander/ae_structure_v1_to_v3/src/buildTaxonomiesNonLr.js",
 		"/C/Users/Alexander/ae_structure_v1_to_v3/src/buildTaxonomiesLr.js",
@@ -255,10 +242,7 @@
 		"/C/Users/alex/apflora_api/queries/feldkontrZaehleinheit.js",
 		"/C/Users/alex/apflora_api/queries/gemeinden.js",
 		"/C/Users/alex/apflora_api/queries/idealbiotopUebereinst.js",
-		"/C/Users/alex/apflora_api/queries/lrDelarze.js",
-		"/C/Users/alex/apflora_api/queries/popChKarte.js",
-		"/C/Users/alex/apflora_api/queries/exportViewWhereIdIn.js",
-		"/C/Users/alex/apflora_api/queries/exportView.js"
+		"/C/Users/alex/apflora_api/queries/lrDelarze.js"
 	],
 	"find":
 	{
@@ -556,35 +540,37 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "/D/gd/artendb/push.txt",
+					"file": "package.json",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7189,
+						"buffer_size": 329,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								136,
-								64
+								116,
+								116
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -593,15 +579,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3449,
+						"buffer_size": 2407,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1115,
-								1115
+								0,
+								0
 							]
 						],
 						"settings":
@@ -611,74 +597,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2574.0,
+						"translation.y": 102.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "src/rebuildObjects.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2575,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2320,
-								2320
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1485.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/buildLrTaxonomieObject.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1619,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								903,
-								903
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 99.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
 					"semi_transient": false,
 					"settings":
 					{
@@ -702,7 +628,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
