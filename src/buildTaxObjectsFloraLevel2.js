@@ -3,9 +3,9 @@
 const _ = require('lodash')
 const uuid = require('node-uuid')
 
-module.exports = function (aeDb, taxFlora, taxObjectsFloraLevel1) {
+module.exports = function (sourceDb, aeDb, taxFlora, taxObjectsFloraLevel1) {
   return new Promise((resolve, reject) => {
-    aeDb.view('artendb/baumFlora', {
+    sourceDb.view('ae/prov_baumFlora', {
       group_level: 2
     }, (error, result) => {
       if (error) reject(`error querying view baumFlora: ${error}`)

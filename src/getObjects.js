@@ -1,10 +1,13 @@
 'use strict'
-module.exports = function (aeDb) {
+module.exports = function (sourceDb) {
   return new Promise((resolve, reject) => {
-    aeDb.view('artendb/objekte', {
+    sourceDb.view('ae/prov_objekte', {
       'include_docs': true
     }, (error, res) => {
-      if (error) reject(`error getting objects: ${error}`)
+      if (error) {
+        console.log('getObject.js, error', error)
+        reject(`error getting objects: ${error}`)
+      }
       const objects = res.map((doc) => doc)
       resolve(objects)
     })

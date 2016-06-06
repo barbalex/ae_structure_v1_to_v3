@@ -8,18 +8,18 @@ let taxObjectsFloraLevel1 = null
 let taxObjectsFloraLevel2 = null
 let taxObjectsFloraLevel3 = null
 
-module.exports = function (aeDb, taxFlora, objects) {
+module.exports = function (sourceDb, aeDb, taxFlora, objects) {
   return new Promise((resolve, reject) => {
-    buildTaxObjectsFloraLevel1(aeDb, taxFlora)
+    buildTaxObjectsFloraLevel1(sourceDb, aeDb, taxFlora)
       .then((result) => {
         taxObjectsFloraLevel1 = result
         console.log('taxObjectsFloraLevel1', taxObjectsFloraLevel1.slice(0, 2))
-        return buildTaxObjectsFloraLevel2(aeDb, taxFlora, taxObjectsFloraLevel1)
+        return buildTaxObjectsFloraLevel2(sourceDb, aeDb, taxFlora, taxObjectsFloraLevel1)
       })
       .then((result) => {
         taxObjectsFloraLevel2 = result
         console.log('taxObjectsFloraLevel2', taxObjectsFloraLevel2.slice(0, 2))
-        return buildTaxObjectsFloraLevel3(aeDb, taxFlora, taxObjectsFloraLevel1, taxObjectsFloraLevel2, objects)
+        return buildTaxObjectsFloraLevel3(sourceDb, aeDb, taxFlora, taxObjectsFloraLevel1, taxObjectsFloraLevel2, objects)
       })
       .then((result) => {
         taxObjectsFloraLevel3 = result

@@ -2,9 +2,9 @@
 
 const getTaxonomieObjects = require('./getTaxonomieObjects.js')
 
-module.exports = function (aeDb) {
+module.exports = function (sourceDb, aeDb) {
   console.log('getting taxonomy objects to set parent')
-  getTaxonomieObjects(aeDb)
+  getTaxonomieObjects(sourceDb)
     .then((taxObjects) => {
       console.log('got taxonomy objects > now setting parents')
       taxObjects.forEach((taxObject) => {

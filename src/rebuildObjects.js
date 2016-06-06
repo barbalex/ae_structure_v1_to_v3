@@ -5,7 +5,7 @@ const setParentInLrTaxObjects = require('./setParentInLrTaxObjects.js')
 
 let docsWritten = 0
 
-module.exports = function (aeDb, lrTaxonomies) {
+module.exports = function (sourceDb, aeDb, lrTaxonomies) {
   function bulkSave (docs, end) {
     aeDb.save(docs, (error, result) => {
       if (error) return console.log('error after bulk:', error)
@@ -18,7 +18,7 @@ module.exports = function (aeDb, lrTaxonomies) {
       }
     })
   }
-  aeDb.view('artendb/objekte', {
+  sourceDb.view('ae/prov_objekte', {
     'include_docs': true
   }, (error, res) => {
     if (error) console.log(error)
@@ -48,6 +48,9 @@ module.exports = function (aeDb, lrTaxonomies) {
           doc.Beziehungssammlungen = []
         }
 
+        // rename Gruppe Macromycetes to Pilze
+        if (doc.Gruppe === 'Macromycetes') doc.Gruppe = 'Pilze'
+
         // add org to all objects...
         doc['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
         // ...to all property collections...
@@ -55,12 +58,30 @@ module.exports = function (aeDb, lrTaxonomies) {
           doc.Eigenschaftensammlungen[index]['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
         })
         // ...and to all relation collections
-        doc.Beziehungssammlungen.forEach((es, index) => {
-          doc.Beziehungssammlungen[index]['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
+        doc.Beziehungssammlungen.forEach((es, iBS) => {
+          doc.Beziehungssammlungen[iBS]['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
+          // rename all beziehungspartners Gruppe when Macromycetes to Pilze
+          if (es.Beziehungen && es.Beziehungen.length) {
+            es.Beziehungen.forEach((bez, iB) => {
+              if (
+                doc.Beziehungssammlungen[iBS].Beziehungen[iB].Beziehungspartner &&
+                doc.Beziehungssammlungen[iBS].Beziehungen[iB].Beziehungspartner.length
+              ) {
+                doc.Beziehungssammlungen[iBS].Beziehungen[iB].Beziehungspartner.forEach((bP, iBP) => {
+                  if (
+                    doc.Beziehungssammlungen[iBS].Beziehungen[iB].Beziehungspartner[iBP].Gruppe &&
+                    doc.Beziehungssammlungen[iBS].Beziehungen[iB].Beziehungspartner[iBP].Gruppe === 'Macromycetes'
+                  ) {
+                    doc.Beziehungssammlungen[iBS].Beziehungen[iB].Beziehungspartner[iBP].Gruppe = 'Pilze'
+                  }
+                })
+              }
+            })
+          }
         })
 
         // build taxonomie-Objekte for LR
-        if (doc.Gruppe === 'Lebensräume') buildLrTaxonomieObject(aeDb, doc, index, lrTaxonomies)
+        if (doc.Gruppe === 'Lebensräume') buildLrTaxonomieObject(sourceDb, aeDb, doc, index, lrTaxonomies)
 
         // remove Taxonomie(n)
         delete doc.Taxonomie

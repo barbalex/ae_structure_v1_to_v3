@@ -2,9 +2,9 @@
 
 const uuid = require('node-uuid')
 
-module.exports = function (aeDb) {
+module.exports = function (sourceDb, aeDb) {
   return new Promise((resolve, reject) => {
-    aeDb.view('artendb/baumLr', {
+    sourceDb.view('ae/prov_baumLr', {
       startkey: [1],
       endkey: [1, '\u9999', '\u9999', '\u9999', '\u9999', '\u9999'],
       reduce: false,

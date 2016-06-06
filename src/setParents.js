@@ -8,7 +8,8 @@ const connection = new (cradle.Connection)(`127.0.0.1`, 5984, {
     password: couchPass.pass
   }
 })
-const aeDb = connection.database('artendb')
+const sourceDb = connection.database('artendb')
+const aeDb = connection.database('ae')
 const setParentInLrTaxObjects = require('./setParentInLrTaxObjects.js')
 
-setParentInLrTaxObjects(aeDb)
+setParentInLrTaxObjects(sourceDb, aeDb)

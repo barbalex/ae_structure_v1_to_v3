@@ -1,7 +1,7 @@
 'use strict'
-module.exports = function (aeDb) {
+module.exports = function (sourceDb) {
   return new Promise((resolve, reject) => {
-    aeDb.view('artendb/taxonomie_objekte', {
+    sourceDb.view('ae/taxonomy_objects', {
       'include_docs': true
     }, (error, res) => {
       if (error) reject(`error getting objects: ${error}`)

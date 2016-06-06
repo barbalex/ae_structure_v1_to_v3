@@ -2,7 +2,7 @@
 
 const uuid = require('node-uuid')
 
-module.exports = function (aeDb, doc, index, lrTaxonomies) {
+module.exports = function (sourceDb, aeDb, doc, index, lrTaxonomies) {
   // this is lr > create Taxonomie-Objekt
   // first check needed fields
   if (!doc.Taxonomie.Eigenschaften.Parent) {

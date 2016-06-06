@@ -3,7 +3,7 @@
 const uuid = require('node-uuid')
 let nonLrTaxonomies = require('./nonLrTaxonomies.js')
 
-module.exports = function (aeDb) {
+module.exports = function (sourceDb, aeDb) {
   return new Promise((resolve, reject) => {
     // generate id's
     nonLrTaxonomies.forEach((tax) => {
