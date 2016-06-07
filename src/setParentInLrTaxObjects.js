@@ -2,9 +2,9 @@
 
 const getTaxonomieObjects = require('./getTaxonomieObjects.js')
 
-module.exports = function (sourceDb, aeDb) {
+module.exports = function (db) {
   console.log('getting taxonomy objects to set parent')
-  getTaxonomieObjects(sourceDb)
+  getTaxonomieObjects(db)
     .then((taxObjects) => {
       console.log('got taxonomy objects > now setting parents')
       taxObjects.forEach((taxObject) => {
@@ -18,7 +18,7 @@ module.exports = function (sourceDb, aeDb) {
           } else {
             taxObject.parent = parentTaxObject._id
             delete taxObject.parentObject
-            aeDb.save(taxObject, (error, res) => {
+            db.save(taxObject, (error, res) => {
               if (error) console.log('error saving:', taxObject)
             })
           }
