@@ -5,20 +5,20 @@ const setParentInLrTaxObjects = require('./setParentInLrTaxObjects.js')
 
 let docsWritten = 0
 
-module.exports = function (sourceDb, aeDb, lrTaxonomies) {
+module.exports = function (db, lrTaxonomies) {
   function bulkSave (docs, end) {
-    aeDb.save(docs, (error, result) => {
+    db.save(docs, (error, result) => {
       if (error) return console.log('error after bulk:', error)
       docsWritten = docsWritten + docs.length
       console.log('docsWritten', docsWritten)
       if (end) {
         setTimeout(function () {
-          setParentInLrTaxObjects(aeDb)
+          setParentInLrTaxObjects(db)
         }, 40000)
       }
     })
   }
-  sourceDb.view('ae/prov_objekte', {
+  db.view('artendb/prov_objekte', {
     'include_docs': true
   }, (error, res) => {
     if (error) console.log(error)
@@ -81,7 +81,7 @@ module.exports = function (sourceDb, aeDb, lrTaxonomies) {
         })
 
         // build taxonomie-Objekte for LR
-        if (doc.Gruppe === 'Lebensräume') buildLrTaxonomieObject(sourceDb, aeDb, doc, index, lrTaxonomies)
+        if (doc.Gruppe === 'Lebensräume') buildLrTaxonomieObject(db, doc, index, lrTaxonomies)
 
         // remove Taxonomie(n)
         delete doc.Taxonomie
