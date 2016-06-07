@@ -26,15 +26,7 @@ const connection = new (cradle.Connection)(`127.0.0.1`, 5984, {
     password: couchPass.pass
   }
 })
-const sourceDb = connection.database('ae')
-const connection2 = new (cradle.Connection)(`127.0.0.1`, 5984, {
-  auth: {
-    username: couchPass.user,
-    password: couchPass.pass
-  }
-})
-//const aeDb = connection2.database('ae')
-const aeDb = sourceDb
+const db = connection.database('artendb')
 const getObjects = require('./src/getObjects.js')
 const buildTaxonomiesNonLr = require('./src/buildTaxonomiesNonLr.js')
 const buildTaxonomiesLr = require('./src/buildTaxonomiesLr.js')
@@ -52,16 +44,16 @@ let taxFauna = null
 let taxFlora = null
 let taxPilze = null
 
-getObjects(aeDb)
+getObjects(db)
   .then((result) => {
     objects = result
     console.log('objects', objects.slice(0, 2))
-    return buildTaxonomiesNonLr(sourceDb, aeDb)
+    return buildTaxonomiesNonLr(db)
   })
   .then((result) => {
     taxonomies = result
     console.log('taxonomies', taxonomies.slice(0, 2))
-    return buildTaxonomiesLr(sourceDb, aeDb)
+    return buildTaxonomiesLr(db)
   })
   .then((result) => {
     lrTaxonomies = result
@@ -70,11 +62,11 @@ getObjects(aeDb)
     taxFauna = taxonomies.find((taxonomy) => taxonomy.Name === 'CSCF (2009)')
     taxFlora = taxonomies.find((taxonomy) => taxonomy.Name === 'SISF Index 2 (2005)')
     taxPilze = taxonomies.find((taxonomy) => taxonomy.Name === 'Swissfunghi (2011)')
-    return buildTaxObjectsFauna(sourceDb, aeDb, taxFauna, objects)
+    return buildTaxObjectsFauna(db, taxFauna, objects)
   })
-  .then(() => buildTaxObjectsFlora(sourceDb, aeDb, taxFlora, objects))
-  .then(() => buildTaxObjectsPilze(sourceDb, aeDb, taxPilze, objects))
-  .then(() => buildTaxObjectsMoose(sourceDb, aeDb, taxPilze, objects))
-  .then(() => rebuildObjects(sourceDb, aeDb, lrTaxonomies))
-  .then(() => buildGroups(sourceDb, aeDb))
+  .then(() => buildTaxObjectsFlora(db, taxFlora, objects))
+  .then(() => buildTaxObjectsPilze(db, taxPilze, objects))
+  .then(() => buildTaxObjectsMoose(db, taxPilze, objects))
+  .then(() => rebuildObjects(db, lrTaxonomies))
+  .then(() => buildGroups(db))
   .catch((error) => console.log(error))
