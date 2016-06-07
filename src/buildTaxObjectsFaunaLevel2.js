@@ -3,9 +3,9 @@
 const _ = require('lodash')
 const uuid = require('node-uuid')
 
-module.exports = function (sourceDb, aeDb, taxFauna, taxObjectsFaunaLevel1) {
+module.exports = function (db, taxFauna, taxObjectsFaunaLevel1) {
   return new Promise((resolve, reject) => {
-    sourceDb.view('ae/prov_baumFauna', {
+    db.view('artendb/prov_baumFauna', {
       group_level: 2
     }, (error, result) => {
       if (error) reject(`error querying view baumFauna: ${error}`)
@@ -24,7 +24,7 @@ module.exports = function (sourceDb, aeDb, taxFauna, taxObjectsFaunaLevel1) {
           parent: parent
         }
       })
-      aeDb.save(taxObjectsFaunaLevel2, (error, results) => {
+      db.save(taxObjectsFaunaLevel2, (error, results) => {
         if (error) reject(`error saving taxObjectsFaunaLevel2 ${error}`)
         // update taxObjectsFaunaLevel2
         results.forEach((res, i) => {
