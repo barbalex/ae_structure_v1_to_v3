@@ -1,7 +1,7 @@
 'use strict'
-module.exports = function (sourceDb) {
+module.exports = function (db) {
   return new Promise((resolve, reject) => {
-    sourceDb.view('ae/prov_objekte', {
+    db.view('artendb/prov_objekte', {
       'include_docs': true
     }, (error, res) => {
       if (error) {
