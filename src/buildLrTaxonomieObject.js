@@ -2,7 +2,7 @@
 
 const uuid = require('node-uuid')
 
-module.exports = function (sourceDb, aeDb, doc, index, lrTaxonomies) {
+module.exports = function (db, doc, index, lrTaxonomies) {
   // this is lr > create Taxonomie-Objekt
   // first check needed fields
   if (!doc.Taxonomie.Eigenschaften.Parent) {
@@ -33,7 +33,7 @@ module.exports = function (sourceDb, aeDb, doc, index, lrTaxonomies) {
       parentObject: parentObject
     }
     // save this Taxonomie-Objekt
-    aeDb.save(taxObj, (error, res) => {
+    db.save(taxObj, (error, res) => {
       if (error) console.error('error saving taxObj', taxObj)
       // console.log does not appear !?
       // if (index < 5) console.log(`lrTaxonomy-Object Nr. ${index}`, taxObj)
