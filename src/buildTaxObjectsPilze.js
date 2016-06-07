@@ -6,13 +6,13 @@ const buildTaxObjectsPilzeLevel2 = require('./buildTaxObjectsPilzeLevel2.js')
 let taxObjectsPilzeLevel1 = null
 let taxObjectsPilzeLevel2 = null
 
-module.exports = function (sourceDb, aeDb, taxPilze, objects) {
+module.exports = function (db, taxPilze, objects) {
   return new Promise((resolve, reject) => {
-    buildTaxObjectsPilzeLevel1(sourceDb, aeDb, taxPilze)
+    buildTaxObjectsPilzeLevel1(db, taxPilze)
       .then((result) => {
         taxObjectsPilzeLevel1 = result
         console.log('taxObjectsPilzeLevel1', taxObjectsPilzeLevel1.slice(0, 2))
-        return buildTaxObjectsPilzeLevel2(sourceDb, aeDb, taxPilze, taxObjectsPilzeLevel1, objects)
+        return buildTaxObjectsPilzeLevel2(db, taxPilze, taxObjectsPilzeLevel1, objects)
       })
       .then((result) => {
         taxObjectsPilzeLevel2 = result
