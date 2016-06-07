@@ -2,9 +2,9 @@
 
 const uuid = require('node-uuid')
 
-module.exports = function (sourceDb, aeDb) {
+module.exports = function (db) {
   return new Promise((resolve, reject) => {
-    sourceDb.view('ae/prov_baumLr', {
+    db.view('artendb/prov_baumLr', {
       startkey: [1],
       endkey: [1, '\u9999', '\u9999', '\u9999', '\u9999', '\u9999'],
       reduce: false,
@@ -30,7 +30,7 @@ module.exports = function (sourceDb, aeDb) {
           'Organisation mit Schreibrecht': 'FNS Kt. ZH'
         }
       })
-      aeDb.save(taxonomies, (error, results) => {
+      db.save(taxonomies, (error, results) => {
         if (error) reject(`error saving lr-taxonomies ${error}`)
         // update taxonomies
         results.forEach((res, i) => {
