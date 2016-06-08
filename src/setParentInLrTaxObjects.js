@@ -10,7 +10,13 @@ module.exports = function (db) {
       taxObjects.forEach((taxObject) => {
         if (taxObject.parentObject) {
           const parentTaxObject = taxObjects.find((tO) => {
-            if (tO.Objekt && tO.Objekt.id && tO.Objekt.id === taxObject.parentObject) return true
+            if (
+              tO.Objekt &&
+              tO.Objekt.id &&
+              tO.Objekt.id === taxObject.parentObject
+            ) {
+              return true
+            }
             return false
           })
           if (!parentTaxObject) {
@@ -18,7 +24,7 @@ module.exports = function (db) {
           } else {
             taxObject.parent = parentTaxObject._id
             delete taxObject.parentObject
-            db.save(taxObject, (error, res) => {
+            db.save(taxObject, (error) => {
               if (error) console.log('error saving:', taxObject)
             })
           }
