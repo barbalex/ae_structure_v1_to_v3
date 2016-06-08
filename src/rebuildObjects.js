@@ -6,24 +6,24 @@ const setParentInLrTaxObjects = require('./setParentInLrTaxObjects.js')
 let docsWritten = 0
 
 module.exports = function (db, lrTaxonomies) {
-  function bulkSave (docs, end) {
-    db.save(docs, (error, result) => {
+  function bulkSave(docs, end) {
+    db.save(docs, (error) => {
       if (error) return console.log('error after bulk:', error)
       docsWritten = docsWritten + docs.length
       console.log('docsWritten', docsWritten)
       if (end) {
-        setTimeout(function () {
+        setTimeout(() => {
           setParentInLrTaxObjects(db)
         }, 40000)
       }
     })
   }
   db.view('artendb/prov_objekte', {
-    'include_docs': true
+    include_docs: true
   }, (error, res) => {
     if (error) console.log(error)
 
-    let docs = []
+    const docs = []
     let docsPrepared = 0
 
     // loop through docs
@@ -32,19 +32,19 @@ module.exports = function (db, lrTaxonomies) {
 
       // check needed fields
       if (!doc.Gruppe) {
-        console.error(`doc hat keine Gruppe`, doc)
+        console.error('doc hat keine Gruppe', doc)
       } else if (!doc.Taxonomie) {
-        console.error(`doc hat keine Taxonomie`, doc)
+        console.error('doc hat keine Taxonomie', doc)
       } else if (!doc.Taxonomie.Eigenschaften) {
-        console.error(`doc hat keine Taxonomie.Eigenschaften`, doc)
+        console.error('doc hat keine Taxonomie.Eigenschaften', doc)
       } else {
         // check fields that should exist
         if (!doc.Eigenschaftensammlungen) {
-          console.log(`Eigenschaftensammlungen mussten ergänzt werden`, doc)
+          console.log('Eigenschaftensammlungen mussten ergänzt werden', doc)
           doc.Eigenschaftensammlungen = []
         }
         if (!doc.Beziehungssammlungen) {
-          console.log(`Beziehungssammlungen mussten ergänzt werden`, doc)
+          console.log('Beziehungssammlungen mussten ergänzt werden', doc)
           doc.Beziehungssammlungen = []
         }
 
@@ -54,8 +54,8 @@ module.exports = function (db, lrTaxonomies) {
         // add org to all objects...
         doc['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
         // ...to all property collections...
-        doc.Eigenschaftensammlungen.forEach((es, index) => {
-          doc.Eigenschaftensammlungen[index]['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
+        doc.Eigenschaftensammlungen.forEach((es, iES) => {
+          doc.Eigenschaftensammlungen[iES]['Organisation mit Schreibrecht'] = 'FNS Kt. ZH'
         })
         // ...and to all relation collections
         doc.Beziehungssammlungen.forEach((es, iBS) => {
@@ -90,7 +90,10 @@ module.exports = function (db, lrTaxonomies) {
         docs.push(doc)
       }
 
-      if ((docs.length > 600) || (index === res.rows.length - 1)) {
+      if (
+        (docs.length > 600) ||
+        (index === res.rows.length - 1)
+      ) {
         docsPrepared = docsPrepared + docs.length
         console.log('docsPrepared', docsPrepared)
         const end = index === res.rows.length - 1
