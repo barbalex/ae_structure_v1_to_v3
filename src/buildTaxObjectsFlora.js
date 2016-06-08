@@ -8,8 +8,8 @@ let taxObjectsFloraLevel1 = null
 let taxObjectsFloraLevel2 = null
 let taxObjectsFloraLevel3 = null
 
-module.exports = function (db, taxFlora, objects) {
-  return new Promise((resolve, reject) => {
+module.exports = (db, taxFlora, objects) =>
+  new Promise((resolve, reject) => {
     buildTaxObjectsFloraLevel1(db, taxFlora)
       .then((result) => {
         taxObjectsFloraLevel1 = result
@@ -29,4 +29,3 @@ module.exports = function (db, taxFlora, objects) {
       })
       .catch((error) => reject(error))
   })
-}
