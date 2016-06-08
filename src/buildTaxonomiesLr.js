@@ -2,18 +2,18 @@
 
 const uuid = require('node-uuid')
 
-module.exports = function (db) {
-  return new Promise((resolve, reject) => {
+module.exports = (db) =>
+  new Promise((resolve, reject) => {
     db.view('artendb/prov_baumLr', {
       startkey: [1],
       endkey: [1, '\u9999', '\u9999', '\u9999', '\u9999', '\u9999'],
       reduce: false,
-      'include_docs': true
+      include_docs: true
     }, (error, result) => {
       if (error) reject(`error querying view baumLr: ${error}`)
       // console.log('buildTaxonomiesLr, result from baumLr', result)
       // resolve(true)
-      let taxonomies = result.rows.map((row) => {
+      const taxonomies = result.rows.map((row) => {
         const doc = row.doc
         return {
           _id: uuid.v4(),
@@ -30,8 +30,8 @@ module.exports = function (db) {
           'Organisation mit Schreibrecht': 'FNS Kt. ZH'
         }
       })
-      db.save(taxonomies, (error, results) => {
-        if (error) reject(`error saving lr-taxonomies ${error}`)
+      db.save(taxonomies, (err, results) => {
+        if (err) reject(`error saving lr-taxonomies ${err}`)
         // update taxonomies
         results.forEach((res, i) => {
           taxonomies[i]._rev = res.rev
@@ -40,4 +40,3 @@ module.exports = function (db) {
       })
     })
   })
-}
