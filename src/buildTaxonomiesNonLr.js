@@ -1,10 +1,10 @@
 'use strict'
 
 const uuid = require('node-uuid')
-let nonLrTaxonomies = require('./nonLrTaxonomies.js')
+const nonLrTaxonomies = require('./nonLrTaxonomies.js')
 
-module.exports = function (db) {
-  return new Promise((resolve, reject) => {
+module.exports = (db) =>
+  new Promise((resolve, reject) => {
     // generate id's
     nonLrTaxonomies.forEach((tax) => {
       tax._id = uuid.v4()
@@ -19,4 +19,3 @@ module.exports = function (db) {
       resolve(nonLrTaxonomies)
     })
   })
-}
