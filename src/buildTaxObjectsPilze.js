@@ -6,8 +6,8 @@ const buildTaxObjectsPilzeLevel2 = require('./buildTaxObjectsPilzeLevel2.js')
 let taxObjectsPilzeLevel1 = null
 let taxObjectsPilzeLevel2 = null
 
-module.exports = function (db, taxPilze, objects) {
-  return new Promise((resolve, reject) => {
+module.exports = (db, taxPilze, objects) =>
+  new Promise((resolve, reject) => {
     buildTaxObjectsPilzeLevel1(db, taxPilze)
       .then((result) => {
         taxObjectsPilzeLevel1 = result
@@ -22,4 +22,3 @@ module.exports = function (db, taxPilze, objects) {
       })
       .catch((error) => reject(error))
   })
-}
