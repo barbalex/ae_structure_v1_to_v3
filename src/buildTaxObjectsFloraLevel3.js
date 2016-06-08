@@ -3,22 +3,22 @@
 const _ = require('lodash')
 const uuid = require('node-uuid')
 
-module.exports = function (db, taxFlora, taxObjectsFloraLevel1, taxObjectsFloraLevel2, objects) {
-  return new Promise((resolve, reject) => {
+module.exports = (db, taxFlora, taxObjectsFloraLevel1, taxObjectsFloraLevel2, objects) =>
+  new Promise((resolve, reject) => {
     db.view('artendb/prov_baumFlora', {
       group_level: 4
     }, (error, result) => {
       if (error) reject(`error querying view baumFlora: ${error}`)
       const keys = _.map(result, (row) => row.key)
-      let taxObjectsFloraLevel3 = _.map(keys, (key) => {
+      const taxObjectsFloraLevel3 = _.map(keys, (key) => {
         const taxonomie = taxFlora._id
         const familieObjektName = key[0]
-        const familieObject = taxObjectsFloraLevel1.find(
-          (taxObj) => taxObj.Name === familieObjektName
+        const familieObject = taxObjectsFloraLevel1.find((taxObj) =>
+          taxObj.Name === familieObjektName
         )
         const gattungName = key[1]
-        const gattungObject = taxObjectsFloraLevel2.find(
-          (taxObj) => taxObj.Name === gattungName && taxObj.parent === familieObject._id
+        const gattungObject = taxObjectsFloraLevel2.find((taxObj) =>
+          taxObj.Name === gattungName && taxObj.parent === familieObject._id
         )
         const name = key[2]
         const parent = gattungObject._id
@@ -34,11 +34,11 @@ module.exports = function (db, taxFlora, taxObjectsFloraLevel1, taxObjectsFloraL
             id: objId,
             Eigenschaften: eigenschaften
           },
-          parent: parent
+          parent
         }
       })
-      db.save(taxObjectsFloraLevel3, (error, results) => {
-        if (error) reject(`error saving taxObjectsFloraLevel3 ${error}`)
+      db.save(taxObjectsFloraLevel3, (err, results) => {
+        if (err) reject(`error saving taxObjectsFloraLevel3 ${err}`)
         // update taxObjectsFloraLevel3
         results.forEach((res, i) => {
           taxObjectsFloraLevel3[i]._rev = res.rev
@@ -47,4 +47,3 @@ module.exports = function (db, taxFlora, taxObjectsFloraLevel1, taxObjectsFloraL
       })
     })
   })
-}
